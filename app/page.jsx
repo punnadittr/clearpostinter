@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Hot reload trigger
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -19,7 +19,15 @@ import {
     Package,
     Siren,
     Gavel,
-    Unlock
+    Unlock,
+    ChefHat,
+    Smartphone,
+    User,
+    HelpCircle,
+    Star,
+    ChevronDown,
+    FileText,
+    Ship
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
 
@@ -346,6 +354,7 @@ const ClearpostLanding = () => {
                                         <div className="flex items-center gap-3 text-slate-300">
                                             <div className="w-6 h-6 rounded bg-blue-900/50 flex items-center justify-center text-blue-400 text-xs font-bold">3</div>
                                             <p>Amend entry & Release cargo</p>
+                                            ```
                                         </div>
                                     </div>
                                 </div>
@@ -354,7 +363,6 @@ const ClearpostLanding = () => {
                     </div>
                 </div>
             </section>
-
             {/* Pain Points Section */}
             <section id="problems" className="py-24 px-4 bg-slate-50 relative">
                 <div className="max-w-7xl mx-auto">
@@ -457,6 +465,119 @@ const ClearpostLanding = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: What We Clear (Grid) */}
+            <section className="py-24 px-4 bg-slate-50">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <span className="text-blue-600 font-bold tracking-wider uppercase text-sm">Specialized Expertise</span>
+                        <h2 className="text-4xl font-bold text-slate-900 mt-2 mb-6">What We Clear</h2>
+                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">
+                            We don't just guess. We have specialized teams for high-risk categories that require extra permits (Red Line).
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { icon: Package, title: "General Cargo", desc: "Furniture, Clothes, Machine Parts" },
+                            { icon: ChefHat, title: "Food & FDA", desc: "Supplements, Snacks, Drinks (FDA Required)" },
+                            { icon: Smartphone, title: "Electronics / TISI", desc: "Appliances, Servers, Radio Equipment" },
+                            { icon: User, title: "Personal Effects", desc: "Relocating to Thailand? Move duty-free." }
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all group">
+                                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    <item.icon size={24} />
+                                </div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
+                                <p className="text-slate-500 text-sm">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: Trust Signals */}
+            <section className="py-16 bg-slate-900 border-y border-slate-800">
+                <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
+                    <div>
+                        <p className="text-4xl font-bold text-white mb-2">10,000+</p>
+                        <p className="text-slate-400 text-sm uppercase tracking-wider">Shipments Cleared</p>
+                    </div>
+                    <div>
+                        <p className="text-4xl font-bold text-blue-500 mb-2">99.8%</p>
+                        <p className="text-slate-400 text-sm uppercase tracking-wider">Success Rate</p>
+                    </div>
+                    <div>
+                        <p className="text-4xl font-bold text-white mb-2">24h</p>
+                        <p className="text-slate-400 text-sm uppercase tracking-wider">Avg. Clearance Time</p>
+                    </div>
+                    <div className="pt-8 md:pt-0">
+                        <div className="flex justify-center gap-1 text-yellow-500 mb-2">
+                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={20} fill="currentColor" />)}
+                        </div>
+                        <p className="text-slate-400 text-sm italic">"Saved me ฿50k in fines"</p>
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: How It Works (Process) */}
+            <section className="py-24 px-4 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-bold text-slate-900 mb-6">How It Works</h2>
+                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">
+                            Simple, digital, and stress-free.
+                        </p>
+                    </div>
+
+                    <div className="relative grid md:grid-cols-3 gap-12">
+                        {/* Connector Line */}
+                        <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-slate-100 z-0"></div>
+
+                        {[
+                            { icon: FileText, title: "1. Send Docs", desc: "Upload your Invoice & Packing List draft for our pre-audit." },
+                            { icon: ShieldCheck, title: "2. We Clear", desc: "We pay duties, handle customs formalities, and release cargo." },
+                            { icon: Truck, title: "3. Delivery", desc: "We truck the goods from port/airport directly to your door." }
+                        ].map((step, idx) => (
+                            <div key={idx} className="relative z-10 text-center">
+                                <div className="w-24 h-24 bg-white border-4 border-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl">
+                                    <step.icon size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 mb-4">{step.title}</h3>
+                                <p className="text-slate-500 leading-relaxed px-4">{step.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: FAQ Section */}
+            <section className="py-24 px-4 bg-slate-50">
+                <div className="max-w-3xl mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+                    </div>
+
+                    <div className="space-y-4">
+                        {[
+                            { q: "Do I need an import license?", a: "For personal effects, no. For commercial goods, you need to register as an importer (Paperless code) with Thai Customs. We can help you set this up in 1 day." },
+                            { q: "How are duties calculated?", a: "Duties are based on the CIF value (Cost + Insurance + Freight) and the HS Code of your goods. VAT is always 7% on top of the Duty + CIF value." },
+                            { q: "Can you clear food or cosmetics?", a: "Yes, but these require FDA permits *before* shipment. Do not ship without talking to us first, or your goods will be seized." },
+                            { q: "What if my goods are already stuck?", a: "Use our 'Rescue Service'. We will inspect the situation, negotiate with officers, and find a legal solution to release your cargo." }
+                        ].map((faq, idx) => (
+                            <details key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm group">
+                                <summary className="flex justify-between items-center p-6 cursor-pointer list-none font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                                    <span>{faq.q}</span>
+                                    <ChevronDown className="group-open:rotate-180 transition-transform text-slate-400" />
+                                </summary>
+                                <div className="px-6 pb-6 text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
+                                    {faq.a}
+                                </div>
+                            </details>
+                        ))}
                     </div>
                 </div>
             </section>

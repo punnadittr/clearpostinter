@@ -21,7 +21,6 @@ import { exportToExcel } from '../utils/excelExport';
 const STEPS = [
     { id: 'location', title: 'Clearance Location' },
     { id: 'documents', title: 'Documents' },
-    { id: 'payment', title: 'Payment' },
     { id: 'success', title: 'Confirmation' }
 ];
 
@@ -125,8 +124,8 @@ export default function BookingWizard({ onClose }) {
             formPayload.append('contactEmail', formData.contactEmail);
             formPayload.append('contactPhone', formData.contactPhone);
 
-            // Mock Beam Checkout Delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Mock Beam Checkout Delay - REMOVED for Consultation Flow
+            // await new Promise(resolve => setTimeout(resolve, 2000));
 
             await fetch('/', {
                 method: 'POST',
@@ -291,42 +290,10 @@ export default function BookingWizard({ onClose }) {
                     </div>
                 );
 
+            // Payment Step Removed
             case 2:
-                return (
-                    <div className="space-y-6 animate-fade-in-up">
-                        <h3 className="text-2xl font-bold text-slate-900">Payment</h3>
-                        <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-6 rounded-2xl shadow-xl text-white relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-                            <div className="flex justify-between items-start mb-8">
-                                <CreditCard size={32} />
-                                <span className="font-mono text-sm opacity-50">BEAM CHECKOUT</span>
-                            </div>
-                            <div className="space-y-4 relative z-10">
-                                <div>
-                                    <label className="text-xs uppercase text-slate-400 tracking-wider">Card Number</label>
-                                    <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-transparent border-b border-white/20 text-xl font-mono py-2 focus:outline-none focus:border-blue-400 transition-colors" />
-                                </div>
-                                <div className="flex gap-4">
-                                    <div className="flex-1">
-                                        <label className="text-xs uppercase text-slate-400 tracking-wider">Expiry</label>
-                                        <input type="text" placeholder="MM/YY" className="w-full bg-transparent border-b border-white/20 text-lg font-mono py-2 focus:outline-none focus:border-blue-400 transition-colors" />
-                                    </div>
-                                    <div className="w-20">
-                                        <label className="text-xs uppercase text-slate-400 tracking-wider">CVC</label>
-                                        <input type="text" placeholder="123" className="w-full bg-transparent border-b border-white/20 text-lg font-mono py-2 focus:outline-none focus:border-blue-400 transition-colors" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-blue-50 p-4 rounded-xl flex items-start gap-3">
-                            <div className="mt-1 text-blue-600"><CheckCircle size={16} /></div>
-                            <p className="text-sm text-blue-900">
-                                A pre-authorization hold of <strong>฿100</strong> will be applied to verify your card. The actual clearance fee will be charged after the audit.
-                            </p>
-                        </div>
-                    </div>
-                );
+                // Fallthrough to success or handle as error if reached unexpectedly
+                return null;
 
             case 3:
                 return (
@@ -366,7 +333,7 @@ export default function BookingWizard({ onClose }) {
                 {/* Header */}
                 <div className="p-8 border-b border-slate-100">
                     <h2 className="text-xl font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
-                        Clearpost<span className="text-blue-600">.</span> Verify
+                        Clearpost<span className="text-blue-600">.</span> Consultation
                     </h2>
                     {/* Progress Bar */}
                     <div className="flex items-center mt-6 relative">
@@ -386,7 +353,7 @@ export default function BookingWizard({ onClose }) {
                 </div>
 
                 {/* Footer */}
-                {currentStep < 3 && (
+                {currentStep < 2 && (
                     <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-between items-center">
                         <button
                             onClick={handleBack}
@@ -402,7 +369,7 @@ export default function BookingWizard({ onClose }) {
                                 disabled={isSubmitting}
                                 className="px-8 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20 flex items-center gap-2"
                             >
-                                {isSubmitting ? 'Processing...' : 'Confirm & Pay'} <ArrowRight size={20} />
+                                {isSubmitting ? 'Processing...' : 'Request Consultation'} <ArrowRight size={20} />
                             </button>
                         ) : (
                             <button
