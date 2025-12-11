@@ -7,6 +7,7 @@ const inter = Inter({
 })
 
 export const metadata = {
+    metadataBase: new URL('https://clearpost-th.com'),
     title: 'Clearpost | Thailand Customs Broker & Import Specialist',
     description: 'Avoid fines and seized goods. Clearpost provides audit-first logistics for restricted imports: Food (FDA), Medical, Buddha Images, and TISI parts.',
     keywords: ['Thailand Customs Broker', 'Shipping to Bangkok', 'Import License Thailand', 'Clearance Agent Suvarnabhumi', 'FDA Registration Thailand', 'TISI Certification', 'Shipping Buddha Image'],
