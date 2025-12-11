@@ -27,7 +27,10 @@ import {
     Star,
     ChevronDown,
     FileText,
-    Ship
+    Ship,
+    ScrollText,
+    Settings,
+    Utensils
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
 
@@ -499,29 +502,97 @@ const ClearpostLanding = () => {
                 </div>
             </section>
 
-            {/* NEW: Trust Signals */}
-            <section className="py-16 bg-slate-900 border-y border-slate-800">
-                <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-800">
-                    <div>
-                        <p className="text-4xl font-bold text-white mb-2">10,000+</p>
-                        <p className="text-slate-400 text-sm uppercase tracking-wider">Shipments Cleared</p>
-                    </div>
-                    <div>
-                        <p className="text-4xl font-bold text-blue-500 mb-2">99.8%</p>
-                        <p className="text-slate-400 text-sm uppercase tracking-wider">Success Rate</p>
-                    </div>
-                    <div>
-                        <p className="text-4xl font-bold text-white mb-2">24h</p>
-                        <p className="text-slate-400 text-sm uppercase tracking-wider">Avg. Clearance Time</p>
-                    </div>
-                    <div className="pt-8 md:pt-0">
-                        <div className="flex justify-center gap-1 text-yellow-500 mb-2">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={20} fill="currentColor" />)}
+            {/* NEW: Regulatory Shield (Restricted Goods) */}
+            <section className="py-24 px-4 bg-slate-900 border-t border-slate-800 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-blue-900/50 border border-blue-800 text-blue-400 text-xs font-bold uppercase tracking-wider mb-6">
+                                <ShieldCheck size={14} /> Official Permits
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                                We Handle the <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Red Tape</span> for You.
+                            </h2>
+                            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+                                Special items require special licenses. Importers often get stuck because they don't know they need a permit from a specific ministry until the goods arrive.
+                            </p>
+
+                            <ul className="space-y-6">
+                                <li className="flex gap-4">
+                                    <div className="bg-blue-900/30 p-3 rounded-lg text-blue-400 h-fit border border-blue-800/50">
+                                        <ScrollText size={24} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-white font-bold text-lg">Buddha Images & Antiques</h4>
+                                        <p className="text-slate-500 text-sm mt-1">Requires approval from the **Fine Arts Department**. We process the paperwork to ensure respectful and legal entry.</p>
+                                    </div>
+                                </li>
+                                <li className="flex gap-4">
+                                    <div className="bg-blue-900/30 p-3 rounded-lg text-blue-400 h-fit border border-blue-800/50">
+                                        <Settings size={24} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-white font-bold text-lg">Motorcycle & Auto Parts</h4>
+                                        <p className="text-slate-500 text-sm mt-1">Tires, helmets, and pipes often require **TISI Standards**. We check the industrial code compliance before you ship.</p>
+                                    </div>
+                                </li>
+                                <li className="flex gap-4">
+                                    <div className="bg-blue-900/30 p-3 rounded-lg text-blue-400 h-fit border border-blue-800/50">
+                                        <Utensils size={24} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-white font-bold text-lg">Food & Supplements</h4>
+                                        <p className="text-slate-500 text-sm mt-1">Strictly controlled by **FDA**. We help register products and get the import license (LPI) ready.</p>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <p className="text-slate-400 text-sm italic">"Saved me ฿50k in fines"</p>
+
+                        <div className="relative">
+                            <div className="relative bg-slate-800 rounded-3xl p-2 border border-slate-700 shadow-2xl">
+                                <div className="bg-slate-900 rounded-2xl p-8 border border-slate-800">
+                                    <div className="flex items-center justify-between mb-8 pb-8 border-b border-slate-800">
+                                        <div>
+                                            <p className="text-xs text-slate-500 uppercase">Document Status</p>
+                                            <p className="text-green-500 font-mono text-xl font-bold tracking-widest flex items-center gap-2"><CheckCircle size={20} /> APPROVED</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xs text-slate-500 uppercase">License Type</p>
+                                            <p className="text-white font-mono text-xl font-bold">Or. 16 (Fine Arts)</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center text-sm text-slate-400">
+                                            <span>Application Submitted</span>
+                                            <span className="text-slate-600">May 12</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm text-slate-400">
+                                            <span>Officer Review</span>
+                                            <span className="text-slate-600">May 13</span>
+                                        </div>
+                                        <div className="flex justify-between items-center text-sm text-white font-bold bg-green-500/10 p-2 rounded px-3 border border-green-500/20">
+                                            <span>Permit Issued</span>
+                                            <span className="text-green-500">May 14</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Decorative badge */}
+                            <div className="absolute -bottom-6 -right-6 bg-blue-600 text-white p-6 rounded-2xl shadow-xl shadow-blue-900/50">
+                                <p className="text-3xl font-bold">100%</p>
+                                <p className="text-xs font-bold uppercase tracking-wider opacity-80">Legal Compliance</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+
+
 
             {/* NEW: How It Works (Process) */}
             <section className="py-24 px-4 bg-white">
