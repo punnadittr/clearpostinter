@@ -179,7 +179,7 @@ const ClearpostLanding = () => {
                 <div className="absolute inset-0 z-0">
                     <img
                         src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80"
-                        alt="Global Network Abstract"
+                        alt="Global Logistics Network Thailand Import"
                         className="w-full h-full object-cover opacity-30 mix-blend-overlay"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/90 to-blue-900/20"></div>
@@ -450,7 +450,7 @@ const ClearpostLanding = () => {
                             <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 group">
                                 <img
                                     src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1000&q=80"
-                                    alt="Blockchain Logistics Abstract"
+                                    alt="Secure Customs Clearance Process Thailand"
                                     className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
 
