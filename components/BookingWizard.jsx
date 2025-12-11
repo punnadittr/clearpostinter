@@ -183,27 +183,36 @@ export default function BookingWizard({ onClose }) {
 
                         {/* Contact Info */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Your Name"
-                                className="p-3 border rounded-lg"
-                                value={formData.contactName}
-                                onChange={e => setFormData({ ...formData, contactName: e.target.value })}
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                className="p-3 border rounded-lg"
-                                value={formData.contactEmail}
-                                onChange={e => setFormData({ ...formData, contactEmail: e.target.value })}
-                            />
-                            <input
-                                type="tel"
-                                placeholder="Phone"
-                                className="p-3 border rounded-lg md:col-span-2"
-                                value={formData.contactPhone}
-                                onChange={e => setFormData({ ...formData, contactPhone: e.target.value })}
-                            />
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1">Your Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="John Doe"
+                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    value={formData.contactName}
+                                    onChange={e => setFormData({ ...formData, contactName: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
+                                <input
+                                    type="email"
+                                    placeholder="john@example.com"
+                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    value={formData.contactEmail}
+                                    onChange={e => setFormData({ ...formData, contactEmail: e.target.value })}
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    placeholder="+66 81 234 5678"
+                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    value={formData.contactPhone}
+                                    onChange={e => setFormData({ ...formData, contactPhone: e.target.value })}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-yellow-50 rounded-xl border border-yellow-100">
@@ -229,27 +238,36 @@ export default function BookingWizard({ onClose }) {
                             <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                                 {formData.items.map((item, idx) => (
                                     <div key={idx} className="flex gap-2 items-start">
-                                        <input
-                                            type="text"
-                                            placeholder="Item Description"
-                                            className="flex-1 p-2 border rounded-lg text-sm"
-                                            value={item.desc}
-                                            onChange={e => updateItem(idx, 'desc', e.target.value)}
-                                        />
-                                        <input
-                                            type="number"
-                                            placeholder="Qty"
-                                            className="w-16 p-2 border rounded-lg text-sm"
-                                            value={item.qty}
-                                            onChange={e => updateItem(idx, 'qty', parseInt(e.target.value))}
-                                        />
-                                        <input
-                                            type="number"
-                                            placeholder="Value (THB)"
-                                            className="w-24 p-2 border rounded-lg text-sm"
-                                            value={item.value}
-                                            onChange={e => updateItem(idx, 'value', parseFloat(e.target.value))}
-                                        />
+                                        <div className="flex-1">
+                                            <label className="block text-xs font-bold text-slate-500 mb-1">Description</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Item Description"
+                                                className="w-full p-2 border rounded-lg text-sm"
+                                                value={item.desc}
+                                                onChange={e => updateItem(idx, 'desc', e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1">Qty</label>
+                                            <input
+                                                type="number"
+                                                placeholder="1"
+                                                className="w-16 p-2 border rounded-lg text-sm"
+                                                value={item.qty}
+                                                onChange={e => updateItem(idx, 'qty', parseInt(e.target.value))}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 mb-1">Value (THB)</label>
+                                            <input
+                                                type="number"
+                                                placeholder="500"
+                                                className="w-24 p-2 border rounded-lg text-sm"
+                                                value={item.value}
+                                                onChange={e => updateItem(idx, 'value', parseFloat(e.target.value))}
+                                            />
+                                        </div>
                                         <button onClick={() => removeItem(idx)} className="p-2 text-red-400 hover:text-red-600"><X size={16} /></button>
                                     </div>
                                 ))}

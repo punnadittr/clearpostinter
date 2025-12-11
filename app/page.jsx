@@ -184,7 +184,7 @@ const ClearpostLanding = () => {
                             Thailand Import Specialist
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-8">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-8">
                             Don't let <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-white">Customs</span>
                             <br /> kill your vibe.
@@ -359,8 +359,8 @@ const ClearpostLanding = () => {
             <section id="problems" className="py-24 px-4 bg-slate-50 relative">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-20">
-                        <h2 className="text-4xl font-bold text-slate-900 mb-6">Why Importers Fear Thai Customs</h2>
-                        <p className="text-xl text-slate-500 max-w-2xl mx-auto font-light">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Why Importers Fear Thai Customs</h2>
+                        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light">
                             The system isn't just strict; it's unpredictable. Here is what you are up against without a partner.
                         </p>
                     </div>
@@ -386,7 +386,7 @@ const ClearpostLanding = () => {
                                 desc: "When things go wrong, nobody speaks English. You are left in the dark while storage fees pile up daily."
                             }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-10 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 group">
+                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 group">
                                 <div className={`w-16 h-16 bg-${item.color}-50 text-${item.color}-500 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
                                     <item.icon size={32} strokeWidth={1.5} />
                                 </div>
