@@ -16,6 +16,8 @@ import {
     ArrowLeft,
     Download
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import * as yup from 'yup';
 import { exportToExcel } from '../utils/excelExport';
 
 const STEPS = [
@@ -30,10 +32,40 @@ const LOCATIONS = [
     { id: 'passenger', label: 'Passenger / Airport', icon: User, desc: 'Hand-carry items' }
 ];
 
+const schemas = {
+    0: yup.object().shape({
+        serviceType: yup.string().required('Please select a service type'),
+        location: yup.string().required('Please select a location')
+    }),
+    1: yup.object().shape({
+        contactName: yup.string().required('Name is required'),
+        contactEmail: yup.string().email('Invalid email').required('Email is required'),
+        contactPhone: yup.string().matches(/^[0-9+\-\s]+$/, 'Invalid phone number').required('Phone is required'),
+        hasInvoice: yup.boolean(),
+        files: yup.array().when('hasInvoice', {
+            is: true,
+            then: (schema) => schema.min(1, 'Please upload at least one document')
+        }),
+        items: yup.array().when('hasInvoice', {
+            is: false,
+            then: (schema) => schema.of(
+                yup.object().shape({
+                    desc: yup.string().required('Description required'),
+                    qty: yup.number().min(1, 'Min 1').required(),
+                    value: yup.number().min(0).required()
+                })
+            ).min(1, 'Add at least one item')
+        })
+    })
+};
+
 export default function BookingWizard({ onClose }) {
+    const router = useRouter();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
+        serviceType: 'general', // Default
         location: '',
         hasInvoice: true,
         files: [],
@@ -43,9 +75,34 @@ export default function BookingWizard({ onClose }) {
         contactPhone: ''
     });
 
-    const handleNext = () => {
-        if (currentStep < STEPS.length - 1) {
-            setCurrentStep(curr => curr + 1);
+    const handleNext = async () => {
+        try {
+            if (schemas[currentStep]) {
+                await schemas[currentStep].validate(formData, { abortEarly: false });
+                setErrors({});
+            }
+            if (currentStep < STEPS.length - 1) {
+                // If moving from step 1 to 2, we actually submit
+                if (currentStep === 1) {
+                    await handleSubmit();
+                } else {
+                    setCurrentStep(curr => curr + 1);
+                }
+            }
+        } catch (err) {
+            const newErrors = {};
+            if (err.inner) {
+                err.inner.forEach(error => {
+                    if (error.path && error.path.startsWith('items[')) {
+                        newErrors['items'] = 'Please complete all item fields';
+                    } else if (error.path) {
+                        newErrors[error.path] = error.message;
+                    }
+                });
+            } else {
+                console.error(err);
+            }
+            setErrors(newErrors);
         }
     };
 
@@ -96,9 +153,7 @@ export default function BookingWizard({ onClose }) {
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
             if (key === 'files') {
-                // File upload handling for Netlify (needs specific encoding normally, simplified here)
-                // Note: Multi-file ajax upload to Netlify Forms can be tricky in free tier
-                // We will skip actual file binary for this demo/text submission
+                // File upload handling
             } else if (key === 'items') {
                 formData.append(key, JSON.stringify(data[key]));
             } else {
@@ -109,34 +164,34 @@ export default function BookingWizard({ onClose }) {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setIsSubmitting(true);
 
         try {
-            // Netlify Forms Submission
-            // Ideally we use fetch with FormData
             const formPayload = new FormData();
-            formPayload.append('form-name', 'booking-contact');
+            formPayload.append('form-name', 'customs-request');
+            formPayload.append('serviceType', formData.serviceType);
             formPayload.append('location', formData.location);
-            formPayload.append('hasInvoice', formData.hasInvoice);
+            formPayload.append('hasInvoice', formData.hasInvoice.toString());
             formPayload.append('items', JSON.stringify(formData.items));
             formPayload.append('contactName', formData.contactName);
             formPayload.append('contactEmail', formData.contactEmail);
             formPayload.append('contactPhone', formData.contactPhone);
 
-            // Mock Beam Checkout Delay - REMOVED for Consultation Flow
-            // await new Promise(resolve => setTimeout(resolve, 2000));
+            // Append files if present
+            formData.files.forEach((file) => {
+                formPayload.append('docs', file);
+            });
 
             await fetch('/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams(formPayload).toString(),
+                body: formPayload,
             });
 
-            // Auto-export Excel for admin/user
+            // Auto-export Excel
             // exportToExcel(formData, `Clearpost_Booking_${Date.now()}.xlsx`);
 
-            handleNext(); // Go to success
+            setCurrentStep(curr => curr + 1); // Go to success
         } catch (error) {
             console.error('Submission error:', error);
             alert('Something went wrong. Please try again.');
@@ -150,27 +205,54 @@ export default function BookingWizard({ onClose }) {
             case 0:
                 return (
                     <div className="space-y-6 animate-fade-in-up">
-                        <h3 className="text-2xl font-bold text-slate-900">Where is your shipment?</h3>
-                        <div className="grid gap-4">
-                            {LOCATIONS.map(loc => (
-                                <label key={loc.id} className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all hover:bg-slate-50 ${formData.location === loc.id ? 'border-blue-600 bg-blue-50/50' : 'border-slate-200'}`}>
-                                    <input
-                                        type="radio"
-                                        name="location"
-                                        value={loc.id}
-                                        checked={formData.location === loc.id}
-                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                        className="w-5 h-5 text-blue-600"
-                                    />
-                                    <div className={`p-3 rounded-full ${formData.location === loc.id ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                                        <loc.icon size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-slate-900">{loc.label}</p>
-                                        <p className="text-sm text-slate-500">{loc.desc}</p>
-                                    </div>
-                                </label>
-                            ))}
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-slate-900">1. Service Type</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                {[
+                                    { id: 'general', label: 'General Import', desc: 'Standard goods' },
+                                    { id: 'restricted', label: 'Restricted', desc: 'FDA, TISI, Permits' },
+                                    { id: 'consultation', label: 'Consultation', desc: 'Advice only' }
+                                ].map(type => (
+                                    <label key={type.id} className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.serviceType === type.id ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-blue-300'}`}>
+                                        <input
+                                            type="radio"
+                                            name="serviceType"
+                                            value={type.id}
+                                            checked={formData.serviceType === type.id}
+                                            onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
+                                            className="sr-only"
+                                        />
+                                        <div className="font-bold text-slate-900">{type.label}</div>
+                                        <div className="text-xs text-slate-500">{type.desc}</div>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-slate-900">2. Service Point</h3>
+                            {errors.location && <p className="text-red-500 text-sm font-medium">{errors.location}</p>}
+                            <div className="grid gap-3">
+                                {LOCATIONS.map(loc => (
+                                    <label key={loc.id} className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all hover:bg-slate-50 ${formData.location === loc.id ? 'border-blue-600 bg-blue-50/50' : 'border-slate-200'}`}>
+                                        <input
+                                            type="radio"
+                                            name="location"
+                                            value={loc.id}
+                                            checked={formData.location === loc.id}
+                                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                            className="w-5 h-5 text-blue-600"
+                                        />
+                                        <div className={`p-3 rounded-full ${formData.location === loc.id ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                                            <loc.icon size={24} />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-slate-900">{loc.label}</p>
+                                            <p className="text-sm text-slate-500">{loc.desc}</p>
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 );
@@ -187,30 +269,33 @@ export default function BookingWizard({ onClose }) {
                                 <input
                                     type="text"
                                     placeholder="John Doe"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.contactName ? 'border-red-400 focus:border-red-400' : 'focus:border-blue-400'}`}
                                     value={formData.contactName}
                                     onChange={e => setFormData({ ...formData, contactName: e.target.value })}
                                 />
+                                {errors.contactName && <p className="text-red-500 text-xs mt-1">{errors.contactName}</p>}
                             </div>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
                                 <input
                                     type="email"
                                     placeholder="john@example.com"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.contactEmail ? 'border-red-400 focus:border-red-400' : 'focus:border-blue-400'}`}
                                     value={formData.contactEmail}
                                     onChange={e => setFormData({ ...formData, contactEmail: e.target.value })}
                                 />
+                                {errors.contactEmail && <p className="text-red-500 text-xs mt-1">{errors.contactEmail}</p>}
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
                                 <input
                                     type="tel"
                                     placeholder="+66 81 234 5678"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
+                                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.contactPhone ? 'border-red-400 focus:border-red-400' : 'focus:border-blue-400'}`}
                                     value={formData.contactPhone}
                                     onChange={e => setFormData({ ...formData, contactPhone: e.target.value })}
                                 />
+                                {errors.contactPhone && <p className="text-red-500 text-xs mt-1">{errors.contactPhone}</p>}
                             </div>
                         </div>
 
@@ -220,19 +305,24 @@ export default function BookingWizard({ onClose }) {
                                 <span className="font-medium text-sm sm:text-base">Do you have a Commercial Invoice?</span>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer self-start sm:self-auto mt-2 sm:mt-0">
-                                <input type="checkbox" className="sr-only peer" checked={!formData.hasInvoice} onChange={() => setFormData(prev => ({ ...prev, hasInvoice: !prev.hasInvoice }))} />
+                                <input type="checkbox" className="sr-only peer" checked={formData.hasInvoice} onChange={() => setFormData(prev => ({ ...prev, hasInvoice: !prev.hasInvoice }))} />
                                 <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 shrink-0"></div>
-                                <span className="ml-3 text-sm font-medium text-slate-600">No, I don't</span>
+                                <span className={`ml-3 text-sm font-medium ${formData.hasInvoice ? 'text-blue-600' : 'text-slate-500'}`}>
+                                    {formData.hasInvoice ? 'Yes, I have it' : "No, I don't"}
+                                </span>
                             </label>
                         </div>
 
                         {formData.hasInvoice ? (
-                            <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors relative">
-                                <input type="file" multiple className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleFileChange} />
-                                <Upload className="mx-auto text-slate-400 mb-4" size={32} />
-                                <p className="font-bold text-slate-700">Click to upload Invoice / Airway Bill</p>
-                                <p className="text-sm text-slate-500 mt-2">PDF, JPG, PNG accepted</p>
-                            </div>
+                            <>
+                                <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors relative">
+                                    <input type="file" multiple className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleFileChange} />
+                                    <Upload className="mx-auto text-slate-400 mb-4" size={32} />
+                                    <p className="font-bold text-slate-700">Click to upload Invoice / Airway Bill</p>
+                                    <p className="text-sm text-slate-500 mt-2">PDF, JPG, PNG accepted</p>
+                                </div>
+                                {errors.files && <p className="text-red-500 text-sm font-medium mt-1">{errors.files}</p>}
+                            </>
                         ) : (
                             <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                                 {formData.items.map((item, idx) => (
@@ -273,29 +363,29 @@ export default function BookingWizard({ onClose }) {
                                 <button onClick={addItem} className="text-sm text-blue-600 font-bold flex items-center gap-1 hover:underline">
                                     <Plus size={16} /> Add Item
                                 </button>
+                                {errors.items && <p className="text-red-500 text-xs">{errors.items}</p>}
                             </div>
-                        )}
+                        )
+                        }
 
-                        {formData.files.length > 0 && (
-                            <div className="space-y-2">
-                                <p className="text-sm font-bold text-slate-700">Attached Files:</p>
-                                {formData.files.map((f, i) => (
-                                    <div key={i} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded border border-slate-100">
-                                        <span className="truncate max-w-[200px]">{f.name}</span>
-                                        <button onClick={() => removeFile(i)} className="text-red-500 hover:text-red-700"><X size={14} /></button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                        {
+                            formData.files.length > 0 && (
+                                <div className="space-y-2">
+                                    <p className="text-sm font-bold text-slate-700">Attached Files:</p>
+                                    {formData.files.map((f, i) => (
+                                        <div key={i} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded border border-slate-100">
+                                            <span className="truncate max-w-[200px]">{f.name}</span>
+                                            <button onClick={() => removeFile(i)} className="text-red-500 hover:text-red-700"><X size={14} /></button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )
+                        }
+                    </div >
                 );
 
-            // Payment Step Removed
             case 2:
-                // Fallthrough to success or handle as error if reached unexpectedly
-                return null;
-
-            case 3:
+                // Success Step
                 return (
                     <div className="text-center py-8 animate-fade-in-up">
                         <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -306,17 +396,17 @@ export default function BookingWizard({ onClose }) {
                             We have received your shipment details. Our team is now reviewing your documents and will contact you shortly via <strong>{formData.contactEmail}</strong>.
                         </p>
 
-                        <div className="flex justify-center gap-4">
+
+
+                        <div className="mt-8 pt-8 border-t border-slate-100">
                             <button
-                                onClick={() => exportToExcel(formData)}
-                                className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors"
+                                onClick={() => router.push('/pay')}
+                                className="w-full max-w-sm mx-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-500 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-3 animate-bounce-subtle"
                             >
-                                <Download size={20} />
-                                Download Ticket (Excel)
+                                <CreditCard size={20} />
+                                Pay Deposit (350 THB)
                             </button>
-                            <button onClick={onClose} className="px-6 py-3 text-slate-500 hover:text-slate-900">
-                                Close
-                            </button>
+                            <p className="text-sm text-slate-400 mt-3">Required to start processing your request</p>
                         </div>
                     </div>
                 );
@@ -332,7 +422,7 @@ export default function BookingWizard({ onClose }) {
 
                 {/* Header */}
                 <div className="p-8 border-b border-slate-100">
-                    <h2 className="text-xl font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                    <h2 className="text-lg md:text-xl font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 pr-8">
                         Clearpost<span className="text-blue-600">.</span> Consultation
                     </h2>
                     {/* Progress Bar */}
@@ -365,7 +455,7 @@ export default function BookingWizard({ onClose }) {
 
                         {currentStep === STEPS.length - 2 ? (
                             <button
-                                onClick={handleSubmit}
+                                onClick={handleNext}
                                 disabled={isSubmitting}
                                 className="px-8 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-500/20 flex items-center gap-2"
                             >
@@ -383,13 +473,16 @@ export default function BookingWizard({ onClose }) {
                 )}
 
                 {/* Hidden Form for Netlify Detection */}
-                <form name="booking-contact" data-netlify="true" hidden>
-                    <input type="text" name="location" />
+                <form name="customs-request" method="POST" data-netlify="true" encType="multipart/form-data" hidden>
+                    <input type="hidden" name="form-name" value="customs-request" />
+                    <input type="hidden" name="serviceType" />
+                    <input type="hidden" name="location" />
                     <input type="checkbox" name="hasInvoice" />
                     <textarea name="items" />
                     <input type="text" name="contactName" />
                     <input type="email" name="contactEmail" />
                     <input type="tel" name="contactPhone" />
+                    <input type="file" name="docs" multiple />
                 </form>
             </div>
         </div>
