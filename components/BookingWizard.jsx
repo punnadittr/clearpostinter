@@ -206,14 +206,14 @@ export default function BookingWizard({ onClose }) {
                             />
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-yellow-50 rounded-xl border border-yellow-100">
                             <div className="flex items-center gap-2 text-yellow-800">
-                                <AlertCircle size={20} />
-                                <span className="font-medium">Do you have a Commercial Invoice?</span>
+                                <AlertCircle size={20} className="shrink-0" />
+                                <span className="font-medium text-sm sm:text-base">Do you have a Commercial Invoice?</span>
                             </div>
-                            <label className="relative inline-flex items-center cursor-pointer">
+                            <label className="relative inline-flex items-center cursor-pointer self-start sm:self-auto mt-2 sm:mt-0">
                                 <input type="checkbox" className="sr-only peer" checked={!formData.hasInvoice} onChange={() => setFormData(prev => ({ ...prev, hasInvoice: !prev.hasInvoice }))} />
-                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 shrink-0"></div>
                                 <span className="ml-3 text-sm font-medium text-slate-600">No, I don't</span>
                             </label>
                         </div>
@@ -363,7 +363,7 @@ export default function BookingWizard({ onClose }) {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-4 md:p-8">
                     {renderStepContent()}
                 </div>
 
