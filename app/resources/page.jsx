@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { createClient } from 'contentful';
 
 /**
@@ -26,12 +25,11 @@ async function getPostsFromCMS() {
       order: '-sys.createdAt'
     });
 
-    // 2. Map Data (Strictly based on your provided Schema)
+    // 2. Map Data
     return res.items.map((item) => {
       const { title, content } = item.fields;
       
-      // Extract a simple excerpt from Rich Text (Content)
-      // We grab the first paragraph's value if available
+      // Extract excerpt from Rich Text
       let excerpt = "Click to read more...";
       if (content?.content) {
         const firstParagraph = content.content.find(node => node.nodeType === 'paragraph');
@@ -44,23 +42,16 @@ async function getPostsFromCMS() {
         id: item.sys.id,
         title: title || 'Untitled Post',
         excerpt: excerpt,
-        // Schema doesn't have category, defaulting to 'Blog'
         category: 'Blog', 
-        // Schema doesn't have a date field, using system creation time
         date: new Date(item.sys.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-        readTime: '3 min read', // Placeholder
-        // Schema has NO slug, so we MUST use sys.id for the link
-        slug: item.sys.id, 
-        // Schema has NO image, using a default placeholder
-        imageUrl: 'https://placehold.co/600x400/2563eb/ffffff?text=Clear+Post+Blog'
+        readTime: '3 min read',
+        slug: item.sys.id, // Using sys.id as the slug
+        imageUrl: 'https://placehold.co/600x400/2563eb/ffffff?text=Clearpost+Blog'
       };
     });
 
   } catch (error) {
     console.error("❌ Error fetching from Contentful:", error);
-    if (error.details) {
-      console.error("Details:", JSON.stringify(error.details, null, 2));
-    }
     return getMockData();
   }
 }
@@ -94,7 +85,8 @@ function getMockData() {
 }
 
 export const metadata = {
-  title: "Resources & Blog | Clear Post International",
+  title: "Resources & Blog | Clearpost",
+  description: "Collection of articles, tips, and news about international shipping.",
 };
 
 export default async function ResourcesPage() {
@@ -109,51 +101,60 @@ export default async function ResourcesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <nav className="bg-white border-b border-gray-100 py-4">
+    <div className="min-h-screen bg-gray-50 font-sans text-slate-600">
+      
+      {/* --- Updated Navbar to Match Landing Page --- */}
+      <nav className="bg-white border-b border-gray-100 py-4 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <Link href="/" className="font-bold text-xl text-blue-900 flex items-center gap-2">
-                <Image src="/logo-icon.png" alt="Logo" width={32} height={32} />
-                Clear Post Inter
+            {/* Branding */}
+            <Link href="/" className="flex items-center gap-2 group">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all">
+                    <img src="/logo-icon.png" alt="CP" className="w-6 h-6 object-contain" />
+                </div>
+                <span className="font-bold text-2xl text-slate-900 tracking-tight">Clearpost<span className="text-blue-500">.</span></span>
             </Link>
-            <Link href="/" className="text-sm text-gray-600 hover:text-blue-600">
+
+            {/* Back Link */}
+            <Link href="/" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1">
                 &larr; Back to Home
             </Link>
         </div>
       </nav>
 
+      {/* Hero Section */}
       <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Knowledge Hub</h1>
-          <p className="text-gray-600">Latest updates from Clear Post International</p>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Knowledge Hub</h1>
+          <p className="text-slate-500 text-lg">Latest updates from Clearpost International</p>
         </div>
       </section>
 
+      {/* Posts Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <article key={post.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+            <article key={post.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
               <div className="relative h-48 bg-gray-200 overflow-hidden">
-                <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover"/>
+                <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
               </div>
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                  <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase tracking-wide">
                     {post.category}
                   </span>
-                  <span className="text-xs text-gray-400">{post.date}</span>
+                  <span className="text-xs text-slate-400 font-medium">{post.date}</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors line-clamp-2">
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
                   <Link href={`/resources/${post.slug}`}>
                     {post.title}
                   </Link>
                 </h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">
+                <p className="text-slate-500 text-sm mb-4 line-clamp-3 flex-1 leading-relaxed">
                   {post.excerpt}
                 </p>
-                <div className="pt-4 border-t border-gray-50 mt-auto">
-                    <Link href={`/resources/${post.slug}`} className="text-blue-600 font-medium hover:underline">
-                        Read More
+                <div className="pt-4 border-t border-slate-50 mt-auto">
+                    <Link href={`/resources/${post.slug}`} className="text-blue-600 font-bold text-sm hover:underline flex items-center gap-1">
+                        Read Article &rarr;
                     </Link>
                 </div>
               </div>
@@ -161,6 +162,7 @@ export default async function ResourcesPage() {
           ))}
         </div>
       </section>
+
     </div>
   );
 }
