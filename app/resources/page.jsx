@@ -46,7 +46,9 @@ async function getPostsFromCMS() {
         date: new Date(item.sys.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
         readTime: '3 min read',
         slug: item.sys.id, // Using sys.id as the slug
-        imageUrl: 'https://placehold.co/600x400/2563eb/ffffff?text=Clearpost+Blog'
+         imageUrl: item.fields.image
+          ? "https:" + item.fields.image.fields.file.url
+          : "https://placehold.co/800x600/e2e8f0/64748b?text=Clearpost+Blog",
       };
     });
 

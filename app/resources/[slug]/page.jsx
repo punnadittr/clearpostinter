@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from 'contentful';
 import { notFound } from 'next/navigation';
+import { marked } from "marked";
 
 /**
  * Fetch a single post by ID
@@ -13,33 +14,31 @@ async function getPostById(id) {
     try {
       const client = createClient({ space: spaceId, accessToken: accessToken });
       const item = await client.getEntry(id);
-      const { title, content } = item.fields;
-      
+      const { title, body } = item.fields;
+
       let contentHtml = "";
-      // Simple fallback for Rich Text
-      if (content && content.nodeType === 'document') {
-           contentHtml = content.content.map(node => {
-             if(node.nodeType === 'paragraph') {
-               return `<p>${node.content.map(c => c.value).join('')}</p>`;
-             }
-             if(node.nodeType.startsWith('heading-')) {
-               const level = node.nodeType.split('-')[1];
-               return `<h${level}>${node.content.map(c => c.value).join('')}</h${level}>`;
-             }
-             return '';
-           }).join('');
+
+      if (typeof body === "string" && body.trim().length > 0) {
+        contentHtml = marked(body, { breaks: true });
       } else {
-           contentHtml = "<p>Content is not in expected Rich Text format.</p>";
+        contentHtml = "<p>No markdown content found.</p>";
       }
 
-      return {
-        id: item.sys.id,
-        title,
-        content: contentHtml,
-        category: 'Blog',
-        date: new Date(item.sys.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-        imageUrl: 'https://placehold.co/800x600/e2e8f0/64748b?text=Clearpost+Blog'
-      };
+    return {
+      id: item.sys.id,
+      title,
+      content: contentHtml,
+      category: "Blog",
+      date: new Date(item.sys.createdAt).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
+      imageUrl: item.fields.image
+        ? "https:" + item.fields.image.fields.file.url
+        : "https://placehold.co/800x600/e2e8f0/64748b?text=Clearpost+Blog",
+    };
+
     } catch (error) {
       console.warn(`⚠️ Contentful Entry not found for ID: ${id}.`);
       return null;
@@ -53,25 +52,9 @@ export default async function ResourceDetailPage({ params }) {
 
   // Fallback for Mocks
   if (!post) {
-    if (params.slug === 'mock-1') {
-      post = {
-        title: "5 Tips for Safe International Shipping Packing",
-        content: "<p>This is a MOCK post content. Connect to Contentful to see real data.</p>",
-        category: "Tips & Tricks",
-        date: "12 Dec 2025",
-        imageUrl: "https://placehold.co/600x400/2563eb/ffffff?text=Packing+Tips"
-      };
-    } else if (params.slug === 'mock-2') {
-      post = {
-        title: "Import Tax Update 2025",
-        content: "<p>This is a MOCK post content. Connect to Contentful to see real data.</p>",
-        category: "Regulations",
-        date: "10 Dec 2025",
-        imageUrl: "https://placehold.co/600x400/1e293b/ffffff?text=Tax+Update"
-      };
-    } else {
+  
       notFound();
-    }
+    
   }
 
   return (
@@ -113,10 +96,10 @@ export default async function ResourceDetailPage({ params }) {
           <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" />
         </div>
 
-        <div 
-          className="prose prose-lg prose-blue mx-auto text-slate-600"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+      <div
+  className="mx-auto text-slate-700 max-w-4xl leading-relaxed prose-reset"
+  dangerouslySetInnerHTML={{ __html: post.content }}
+/>
       </article>
 
     
