@@ -12,8 +12,9 @@ import {
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
 import emailjs from '@emailjs/browser';
+import { supabase } from '../lib/supabase';
 
-// EmailJS credentials
+// EmailJS credentials (for email notification)
 const EMAILJS_SERVICE_ID = 'service_v8rmxqa';
 const EMAILJS_TEMPLATE_ID = 'template_jspquuj';
 const EMAILJS_PUBLIC_KEY = 'ksZZpsDDzL3yfdsn-';
@@ -99,7 +100,49 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
-            // Prepare template parameters for EmailJS
+            let fileUrl = null;
+
+            // Upload file to Supabase Storage if exists
+            if (formData.files.length > 0 && formData.files[0]) {
+                const file = formData.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('evidence')
+                    .upload(fileName, file);
+
+                if (uploadError) {
+                    console.error('File upload error:', uploadError);
+                } else {
+                    // Get public URL
+                    const { data: urlData } = supabase.storage
+                        .from('evidence')
+                        .getPublicUrl(fileName);
+                    fileUrl = urlData.publicUrl;
+                }
+            }
+
+            // Save form data to Supabase database
+            const { data, error } = await supabase
+                .from('form_submissions')
+                .insert([{
+                    full_name: formData.fullName,
+                    whatsapp_number: formData.whatsappNumber,
+                    email: formData.email,
+                    shipping_carrier: formData.shippingCarrier,
+                    tracking_number: formData.trackingNumber || null,
+                    item_description: formData.itemDescription,
+                    current_status: formData.currentStatus,
+                    license_status: formData.licenseStatus,
+                    evidence_url: fileUrl,
+                }]);
+
+            if (error) {
+                throw new Error('Failed to save form data');
+            }
+
+            // Send email notification via EmailJS
             const templateParams = {
                 fullName: formData.fullName,
                 whatsappNumber: formData.whatsappNumber,
@@ -109,9 +152,9 @@ export default function BookingWizard({ onClose }) {
                 itemDescription: formData.itemDescription,
                 currentStatus: formData.currentStatus,
                 licenseStatus: formData.licenseStatus,
+                evidenceUrl: fileUrl || 'No file uploaded',
             };
 
-            // Send email via EmailJS
             await emailjs.send(
                 EMAILJS_SERVICE_ID,
                 EMAILJS_TEMPLATE_ID,
