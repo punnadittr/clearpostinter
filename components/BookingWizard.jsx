@@ -93,6 +93,13 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
+            // Build form data manually for Netlify submission
+            const encode = (data) => {
+                return Object.keys(data)
+                    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+                    .join('&');
+            };
+
             // Check if we have files to upload
             const hasFiles = formData.files.length > 0;
 
@@ -109,34 +116,40 @@ export default function BookingWizard({ onClose }) {
                 formPayload.append('currentStatus', formData.currentStatus);
                 formPayload.append('licenseStatus', formData.licenseStatus);
 
-                // Append files
-                formData.files.forEach((file) => {
-                    formPayload.append('evidence', file);
-                });
+                // Append first file only (Netlify only supports one file per field)
+                if (formData.files[0]) {
+                    formPayload.append('evidence', formData.files[0]);
+                }
 
-                await fetch('/', {
+                const response = await fetch('/', {
                     method: 'POST',
                     body: formPayload,
                 });
+
+                if (!response.ok) {
+                    throw new Error('Form submission failed');
+                }
             } else {
                 // Use URL-encoded format for forms without files
-                const formPayload = new URLSearchParams({
-                    'form-name': 'customs-assessment',
-                    'fullName': formData.fullName,
-                    'whatsappNumber': formData.whatsappNumber,
-                    'email': formData.email,
-                    'shippingCarrier': formData.shippingCarrier,
-                    'trackingNumber': formData.trackingNumber || '',
-                    'itemDescription': formData.itemDescription,
-                    'currentStatus': formData.currentStatus,
-                    'licenseStatus': formData.licenseStatus,
-                }).toString();
-
-                await fetch('/', {
+                const response = await fetch('/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formPayload,
+                    body: encode({
+                        'form-name': 'customs-assessment',
+                        'fullName': formData.fullName,
+                        'whatsappNumber': formData.whatsappNumber,
+                        'email': formData.email,
+                        'shippingCarrier': formData.shippingCarrier,
+                        'trackingNumber': formData.trackingNumber || '',
+                        'itemDescription': formData.itemDescription,
+                        'currentStatus': formData.currentStatus,
+                        'licenseStatus': formData.licenseStatus,
+                    }),
                 });
+
+                if (!response.ok) {
+                    throw new Error('Form submission failed');
+                }
             }
 
             setIsSuccess(true);
