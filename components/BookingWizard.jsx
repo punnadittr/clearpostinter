@@ -93,57 +93,32 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
-            // Check if we have files to upload
-            const hasFiles = formData.files.length > 0;
+            // Send form data to email via FormSubmit.co
+            const formPayload = new FormData();
+            formPayload.append('fullName', formData.fullName);
+            formPayload.append('whatsappNumber', formData.whatsappNumber);
+            formPayload.append('email', formData.email);
+            formPayload.append('shippingCarrier', formData.shippingCarrier);
+            formPayload.append('trackingNumber', formData.trackingNumber || 'N/A');
+            formPayload.append('itemDescription', formData.itemDescription);
+            formPayload.append('currentStatus', formData.currentStatus);
+            formPayload.append('licenseStatus', formData.licenseStatus);
+            formPayload.append('_subject', `New Customs Assessment Request from ${formData.fullName}`);
+            formPayload.append('_template', 'table');
+            formPayload.append('_captcha', 'false');
 
-            if (hasFiles) {
-                // Use FormData for file uploads (don't set Content-Type header)
-                const formPayload = new FormData();
-                formPayload.append('form-name', 'customs-assessment');
-                formPayload.append('fullName', formData.fullName);
-                formPayload.append('whatsappNumber', formData.whatsappNumber);
-                formPayload.append('email', formData.email);
-                formPayload.append('shippingCarrier', formData.shippingCarrier);
-                formPayload.append('trackingNumber', formData.trackingNumber || '');
-                formPayload.append('itemDescription', formData.itemDescription);
-                formPayload.append('currentStatus', formData.currentStatus);
-                formPayload.append('licenseStatus', formData.licenseStatus);
+            // Append first file if exists
+            if (formData.files.length > 0 && formData.files[0]) {
+                formPayload.append('attachment', formData.files[0]);
+            }
 
-                // Append first file only (Netlify only supports one file per field)
-                if (formData.files[0]) {
-                    formPayload.append('evidence', formData.files[0]);
-                }
+            const response = await fetch('https://formsubmit.co/ajax/clearpost.acc@gmail.com', {
+                method: 'POST',
+                body: formPayload,
+            });
 
-                const response = await fetch('/forms.html', {
-                    method: 'POST',
-                    body: formPayload,
-                });
-
-                if (!response.ok) {
-                    throw new Error('Form submission failed');
-                }
-            } else {
-                // Create FormData object and convert to URLSearchParams as per Netlify docs
-                const formPayload = new FormData();
-                formPayload.append('form-name', 'customs-assessment');
-                formPayload.append('fullName', formData.fullName);
-                formPayload.append('whatsappNumber', formData.whatsappNumber);
-                formPayload.append('email', formData.email);
-                formPayload.append('shippingCarrier', formData.shippingCarrier);
-                formPayload.append('trackingNumber', formData.trackingNumber || '');
-                formPayload.append('itemDescription', formData.itemDescription);
-                formPayload.append('currentStatus', formData.currentStatus);
-                formPayload.append('licenseStatus', formData.licenseStatus);
-
-                const response = await fetch('/forms.html', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formPayload).toString(),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Form submission failed');
-                }
+            if (!response.ok) {
+                throw new Error('Form submission failed');
             }
 
             setIsSuccess(true);
