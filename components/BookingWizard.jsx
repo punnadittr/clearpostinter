@@ -93,26 +93,51 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
-            const formPayload = new FormData();
-            formPayload.append('form-name', 'customs-assessment');
-            formPayload.append('fullName', formData.fullName);
-            formPayload.append('whatsappNumber', formData.whatsappNumber);
-            formPayload.append('email', formData.email);
-            formPayload.append('shippingCarrier', formData.shippingCarrier);
-            formPayload.append('trackingNumber', formData.trackingNumber);
-            formPayload.append('itemDescription', formData.itemDescription);
-            formPayload.append('currentStatus', formData.currentStatus);
-            formPayload.append('licenseStatus', formData.licenseStatus);
+            // Check if we have files to upload
+            const hasFiles = formData.files.length > 0;
 
-            // Append files if present
-            formData.files.forEach((file) => {
-                formPayload.append('evidence', file);
-            });
+            if (hasFiles) {
+                // Use FormData for file uploads (don't set Content-Type header)
+                const formPayload = new FormData();
+                formPayload.append('form-name', 'customs-assessment');
+                formPayload.append('fullName', formData.fullName);
+                formPayload.append('whatsappNumber', formData.whatsappNumber);
+                formPayload.append('email', formData.email);
+                formPayload.append('shippingCarrier', formData.shippingCarrier);
+                formPayload.append('trackingNumber', formData.trackingNumber || '');
+                formPayload.append('itemDescription', formData.itemDescription);
+                formPayload.append('currentStatus', formData.currentStatus);
+                formPayload.append('licenseStatus', formData.licenseStatus);
 
-            await fetch('/', {
-                method: 'POST',
-                body: formPayload,
-            });
+                // Append files
+                formData.files.forEach((file) => {
+                    formPayload.append('evidence', file);
+                });
+
+                await fetch('/', {
+                    method: 'POST',
+                    body: formPayload,
+                });
+            } else {
+                // Use URL-encoded format for forms without files
+                const formPayload = new URLSearchParams({
+                    'form-name': 'customs-assessment',
+                    'fullName': formData.fullName,
+                    'whatsappNumber': formData.whatsappNumber,
+                    'email': formData.email,
+                    'shippingCarrier': formData.shippingCarrier,
+                    'trackingNumber': formData.trackingNumber || '',
+                    'itemDescription': formData.itemDescription,
+                    'currentStatus': formData.currentStatus,
+                    'licenseStatus': formData.licenseStatus,
+                }).toString();
+
+                await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formPayload,
+                });
+            }
 
             setIsSuccess(true);
         } catch (err) {
