@@ -442,20 +442,6 @@ export default function BookingWizard({ onClose }) {
                         🔒 Your data is strictly confidential and used only for customs assessment purposes.
                     </p>
                 </div>
-
-                {/* Hidden Form for Netlify Detection */}
-                <form name="customs-assessment" method="POST" data-netlify="true" encType="multipart/form-data" hidden>
-                    <input type="hidden" name="form-name" value="customs-assessment" />
-                    <input type="text" name="fullName" />
-                    <input type="tel" name="whatsappNumber" />
-                    <input type="email" name="email" />
-                    <input type="text" name="shippingCarrier" />
-                    <input type="text" name="trackingNumber" />
-                    <textarea name="itemDescription" />
-                    <input type="text" name="currentStatus" />
-                    <input type="text" name="licenseStatus" />
-                    <input type="file" name="evidence" multiple />
-                </form>
             </div>
         </div>
     );
