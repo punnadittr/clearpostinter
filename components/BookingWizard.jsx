@@ -93,13 +93,6 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
-            // Build form data manually for Netlify submission
-            const encode = (data) => {
-                return Object.keys(data)
-                    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-                    .join('&');
-            };
-
             // Check if we have files to upload
             const hasFiles = formData.files.length > 0;
 
@@ -121,7 +114,7 @@ export default function BookingWizard({ onClose }) {
                     formPayload.append('evidence', formData.files[0]);
                 }
 
-                const response = await fetch('/', {
+                const response = await fetch('/forms.html', {
                     method: 'POST',
                     body: formPayload,
                 });
@@ -130,21 +123,22 @@ export default function BookingWizard({ onClose }) {
                     throw new Error('Form submission failed');
                 }
             } else {
-                // Use URL-encoded format for forms without files
-                const response = await fetch('/', {
+                // Create FormData object and convert to URLSearchParams as per Netlify docs
+                const formPayload = new FormData();
+                formPayload.append('form-name', 'customs-assessment');
+                formPayload.append('fullName', formData.fullName);
+                formPayload.append('whatsappNumber', formData.whatsappNumber);
+                formPayload.append('email', formData.email);
+                formPayload.append('shippingCarrier', formData.shippingCarrier);
+                formPayload.append('trackingNumber', formData.trackingNumber || '');
+                formPayload.append('itemDescription', formData.itemDescription);
+                formPayload.append('currentStatus', formData.currentStatus);
+                formPayload.append('licenseStatus', formData.licenseStatus);
+
+                const response = await fetch('/forms.html', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: encode({
-                        'form-name': 'customs-assessment',
-                        'fullName': formData.fullName,
-                        'whatsappNumber': formData.whatsappNumber,
-                        'email': formData.email,
-                        'shippingCarrier': formData.shippingCarrier,
-                        'trackingNumber': formData.trackingNumber || '',
-                        'itemDescription': formData.itemDescription,
-                        'currentStatus': formData.currentStatus,
-                        'licenseStatus': formData.licenseStatus,
-                    }),
+                    body: new URLSearchParams(formPayload).toString(),
                 });
 
                 if (!response.ok) {
