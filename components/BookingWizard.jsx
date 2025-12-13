@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     Upload,
     CheckCircle,
@@ -11,6 +11,12 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
+import emailjs from '@emailjs/browser';
+
+// EmailJS credentials
+const EMAILJS_SERVICE_ID = 'service_v8rmxqa';
+const EMAILJS_TEMPLATE_ID = 'template_jspquuj';
+const EMAILJS_PUBLIC_KEY = 'ksZZpsDDzL3yfdsn-';
 
 const SHIPPING_CARRIERS = [
     { value: '', label: 'Select shipping carrier...' },
@@ -93,33 +99,25 @@ export default function BookingWizard({ onClose }) {
             await formSchema.validate(formData, { abortEarly: false });
             setErrors({});
 
-            // Send form data to email via FormSubmit.co
-            const formPayload = new FormData();
-            formPayload.append('fullName', formData.fullName);
-            formPayload.append('whatsappNumber', formData.whatsappNumber);
-            formPayload.append('email', formData.email);
-            formPayload.append('shippingCarrier', formData.shippingCarrier);
-            formPayload.append('trackingNumber', formData.trackingNumber || 'N/A');
-            formPayload.append('itemDescription', formData.itemDescription);
-            formPayload.append('currentStatus', formData.currentStatus);
-            formPayload.append('licenseStatus', formData.licenseStatus);
-            formPayload.append('_subject', `New Customs Assessment Request from ${formData.fullName}`);
-            formPayload.append('_template', 'table');
-            formPayload.append('_captcha', 'false');
+            // Prepare template parameters for EmailJS
+            const templateParams = {
+                fullName: formData.fullName,
+                whatsappNumber: formData.whatsappNumber,
+                email: formData.email,
+                shippingCarrier: formData.shippingCarrier,
+                trackingNumber: formData.trackingNumber || 'N/A',
+                itemDescription: formData.itemDescription,
+                currentStatus: formData.currentStatus,
+                licenseStatus: formData.licenseStatus,
+            };
 
-            // Append first file if exists
-            if (formData.files.length > 0 && formData.files[0]) {
-                formPayload.append('attachment', formData.files[0]);
-            }
-
-            const response = await fetch('https://formsubmit.co/ajax/clearpost.acc@gmail.com', {
-                method: 'POST',
-                body: formPayload,
-            });
-
-            if (!response.ok) {
-                throw new Error('Form submission failed');
-            }
+            // Send email via EmailJS
+            await emailjs.send(
+                EMAILJS_SERVICE_ID,
+                EMAILJS_TEMPLATE_ID,
+                templateParams,
+                EMAILJS_PUBLIC_KEY
+            );
 
             setIsSuccess(true);
         } catch (err) {
