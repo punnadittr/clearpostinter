@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
     Upload,
     CheckCircle,
@@ -11,13 +11,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
-import emailjs from '@emailjs/browser';
 import { supabase } from '../lib/supabase';
-
-// EmailJS credentials (for email notification)
-const EMAILJS_SERVICE_ID = 'service_v8rmxqa';
-const EMAILJS_TEMPLATE_ID = 'template_jspquuj';
-const EMAILJS_PUBLIC_KEY = 'ksZZpsDDzL3yfdsn-';
 
 const SHIPPING_CARRIERS = [
     { value: '', label: 'Select shipping carrier...' },
@@ -141,26 +135,6 @@ export default function BookingWizard({ onClose }) {
             if (error) {
                 throw new Error('Failed to save form data');
             }
-
-            // Send email notification via EmailJS
-            const templateParams = {
-                fullName: formData.fullName,
-                whatsappNumber: formData.whatsappNumber,
-                email: formData.email,
-                shippingCarrier: formData.shippingCarrier,
-                trackingNumber: formData.trackingNumber || 'N/A',
-                itemDescription: formData.itemDescription,
-                currentStatus: formData.currentStatus,
-                licenseStatus: formData.licenseStatus,
-                evidenceUrl: fileUrl || 'No file uploaded',
-            };
-
-            await emailjs.send(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                templateParams,
-                EMAILJS_PUBLIC_KEY
-            );
 
             setIsSuccess(true);
         } catch (err) {
