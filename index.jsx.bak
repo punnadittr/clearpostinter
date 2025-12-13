@@ -1,24 +1,5 @@
-import React, { useState } from 'react';
-import { 
-  ShieldCheck, 
-  FileSearch, 
-  Truck, 
-  MessageCircle, 
-  Menu, 
-  X, 
-  CheckCircle, 
-  AlertTriangle,
-  Mail,
-  Phone,
-  MapPin,
-  ArrowRight,
-  LifeBuoy,
-  Globe,
-  Package,
-  Siren,
-  Gavel,
-  Unlock
-} from 'lucide-react';
+// Backup (old) index - content removed to strip payment related references
+// Keep as placeholder to avoid accidental restore; create a fresh index.jsx for main site.
 
 const ClearpostLanding = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,10 +75,7 @@ const ClearpostLanding = () => {
     </div>
   );
 
-  return (
-    <div className="font-sans text-slate-600 bg-white min-h-screen selection:bg-blue-100 selection:text-blue-900">
-      {/* Navigation - Dark Glass Style */}
-      <nav className="fixed w-full bg-slate-900/90 backdrop-blur-md shadow-lg z-40 border-b border-white/10 supports-[backdrop-filter]:bg-slate-900/80">
+  return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Backup index removed payment content.</div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             {/* Logo */}

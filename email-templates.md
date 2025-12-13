@@ -9,12 +9,12 @@ Dear [Customer Name],
 
 We have reviewed your documents for the shipment of **[Product Name]**.
 
-Based on our initial assessment, we can proceed with the clearance process. To begin the specialized permit application and detailed consultation, a **working deposit of 1,000 THB** is required.
+Based on our initial assessment, we can proceed with the clearance process. To begin the specialized permit application and detailed consultation, we may require a working deposit or pre-payment. We will contact you with payment details if needed.
 
 **Next Steps:**
-1.  **Pay Deposit:** Please click here to pay the deposit securely via Beam: [Link to your site]/pay
-2.  **Process:** Once paid, our team will immediately start preparing the TISI/FDA applications.
-3.  **Deduction:** This 1,000 THB will be deducted from your final service invoice.
+1.  **Confirmation:** Please reply to this email to confirm you want us to proceed. We will then send instructions for any required payment or invoice.
+2.  **Process:** Once any required pre-payment is received (or confirmed), our team will immediately start preparing the TISI/FDA applications.
+3.  **Deduction:** Any pre-payment will be deducted from your final service invoice.
 
 If you have any questions, simply reply to this email.
 
