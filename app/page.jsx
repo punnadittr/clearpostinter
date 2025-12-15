@@ -28,15 +28,17 @@ import {
     HelpCircle,
     Star,
     ChevronDown,
+    Plane,
+    Upload,
     FileText,
     Ship,
     ScrollText,
     Settings,
-    Utensils,
-    Upload
+    Utensils
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
 import TransparencyIllustration from '../components/TransparencyIllustration';
+import Footer from '../components/Footer';
 
 const ClearpostLanding = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -471,48 +473,97 @@ const ClearpostLanding = () => {
                     </div>
 
 
-                    <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden text-center">
-                        {/* Tier 1: Postal Basic */}
-                        <div className="p-8 hover:bg-slate-50 transition-colors">
-                            <div className="h-12 flex items-center justify-center mb-6">
-                                <Image src="/images/logos/thailandpost.png" alt="Thailand Post" width={120} height={40} className="object-contain h-10 w-auto" />
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {/* Group 1: Postal Services (Spans 2 Columns) */}
+                        <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center">
+                                    <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={100} height={100} className="w-8 h-auto object-contain" />
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-slate-900">Postal Services</h3>
+                                    <p className="text-slate-500 text-sm">Clearance at Laksi Mail Center</p>
+                                </div>
                             </div>
-                            <div className="text-slate-500 font-bold uppercase tracking-wider text-xs mb-4">Postal Service (Basic)</div>
-                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 800</div>
-                            <div className="space-y-2 text-sm text-slate-600">
-                                <p>Import via <strong>Thai Post</strong></p>
-                                <p>Value &le; 40,000 THB</p>
-                                <p>No License Required</p>
+
+                            <div className="grid md:grid-cols-2 gap-8 md:gap-12 relative z-10">
+                                {/* Tier 1 */}
+                                <div className="space-y-4">
+                                    <div className="inline-block px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Basic</div>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-4xl font-bold text-slate-900">฿800</span>
+                                        <span className="text-slate-400 font-medium">/ shipment</span>
+                                    </div>
+                                    <p className="text-sm text-slate-500 leading-relaxed min-h-[3rem]">
+                                        For small packages with declared value under 40,000 THB.
+                                    </p>
+                                    <ul className="space-y-3 text-sm text-slate-600">
+                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" /> <span>Documents Handling</span></li>
+                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" /> <span>Duty Payment Service</span></li>
+                                    </ul>
+                                </div>
+
+                                {/* Divider for mobile */}
+                                <div className="md:hidden h-px bg-slate-100 w-full"></div>
+
+                                {/* Tier 2 */}
+                                <div className="space-y-4 relative">
+                                    {/* Vertical Divider for Desktop */}
+                                    <div className="hidden md:block absolute -left-6 top-0 bottom-0 w-px bg-slate-100"></div>
+
+                                    <div className="inline-block px-3 py-1 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider mb-2">Standard</div>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-4xl font-bold text-slate-900">฿1,500</span>
+                                        <span className="text-slate-400 font-medium">/ shipment</span>
+                                    </div>
+                                    <p className="text-sm text-slate-500 leading-relaxed min-h-[3rem]">
+                                        For value &gt; 40,000 THB <span className="text-blue-600 font-bold">OR</span> items requiring an import license (FDA/TISI).
+                                    </p>
+                                    <ul className="space-y-3 text-sm text-slate-600">
+                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-blue-500 shrink-0 mt-0.5" /> <span>Formal Customs Entry</span></li>
+                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-blue-500 shrink-0 mt-0.5" /> <span>License Submission</span></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Tier 2: Postal Standard */}
-                        <div className="p-8 hover:bg-slate-50 transition-colors bg-slate-50/50">
-                            <div className="h-12 flex items-center justify-center mb-6">
-                                <Image src="/images/logos/thailandpost.png" alt="Thailand Post" width={120} height={40} className="object-contain h-10 w-auto" />
-                            </div>
-                            <div className="text-blue-600 font-bold uppercase tracking-wider text-xs mb-4">Postal Service (Standard)</div>
-                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 1,500</div>
-                            <div className="space-y-2 text-sm text-slate-600">
-                                <p>Import via <strong>Thai Post</strong></p>
-                                <p>Value &gt; 40,000 THB</p>
-                                <p className="text-blue-600 font-medium">OR License Required</p>
-                            </div>
-                        </div>
+                        {/* Group 2: Airport / Courier (Dark Theme) */}
+                        <div className="lg:col-span-1 bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-blue-900/20 text-white relative overflow-hidden group">
+                            {/* Gradient Blobs */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-colors duration-500"></div>
 
-                        {/* Tier 3: Airport / General */}
-                        <div className="p-8 hover:bg-slate-50 transition-colors">
-                            <div className="h-12 flex items-center justify-center gap-4 mb-6 px-4">
-                                <Image src="/images/logos/fedex.png" alt="FedEx" width={60} height={30} className="object-contain h-6 w-auto" />
-                                <Image src="/images/logos/dhl.png" alt="DHL" width={60} height={30} className="object-contain h-6 w-auto" />
-                                <Image src="/images/logos/ups.png" alt="UPS" width={60} height={30} className="object-contain h-8 w-auto" />
-                            </div>
-                            <div className="text-slate-500 font-bold uppercase tracking-wider text-xs mb-4">Airport / General</div>
-                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 4,500</div>
-                            <div className="space-y-2 text-sm text-slate-600">
-                                <p><strong>Suvarnabhumi Airport</strong></p>
-                                <p>Courier Imports</p>
-                                <p>Full Customs Entry</p>
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="flex -space-x-3">
+                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
+                                            <Image src="/images/logos/fedex.png" alt="FedEx" width={40} height={40} className="object-contain" />
+                                        </div>
+                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
+                                            <Image src="/images/logos/dhl.png" alt="DHL" width={40} height={40} className="object-contain" />
+                                        </div>
+                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
+                                            <Image src="/images/logos/ups.png" alt="UPS" width={40} height={40} className="object-contain" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="inline-block px-3 py-1 rounded-lg bg-blue-600 text-white text-xs font-bold uppercase tracking-wider mb-6 shadow-lg shadow-blue-600/40">
+                                    Air Freight / Courier
+                                </div>
+
+                                <h3 className="text-3xl font-bold text-white mb-2">฿4,500</h3>
+                                <p className="text-slate-400 text-sm mb-8">Starting price for full customs processing at Suvarnabhumi Airport.</p>
+
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                        <p className="text-sm font-bold text-blue-200 mb-1">Complex Clearance</p>
+                                        <p className="text-xs text-slate-400">For detained courier shipments (FedEx, DHL, UPS) or Air Cargo.</p>
+                                    </div>
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                                        <p className="text-sm font-bold text-blue-200 mb-1">Permit Handling</p>
+                                        <p className="text-xs text-slate-400">Includes coordination with FDA, TISI, or NBTC if required.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -758,6 +809,7 @@ const ClearpostLanding = () => {
                     </div>
                 </div>
             </section>
+
 
 
 
