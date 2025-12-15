@@ -32,7 +32,8 @@ import {
     Ship,
     ScrollText,
     Settings,
-    Utensils
+    Utensils,
+    Upload
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
 import TransparencyIllustration from '../components/TransparencyIllustration';
@@ -134,7 +135,7 @@ const ClearpostLanding = () => {
                         alt="Global Logistics Network Thailand Import"
                         className="w-full h-full object-cover opacity-30 mix-blend-overlay"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/90 to-blue-900/20"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/50 to-slate-900"></div>
                     {/* Animated Gradients */}
                     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[128px] animate-pulse"></div>
                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[128px] animate-pulse delay-700"></div>
@@ -154,7 +155,7 @@ const ClearpostLanding = () => {
                         </h1>
 
                         <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-lg font-light">
-                            We provide <strong>audit-first logistics</strong>. We fix your paperwork <em>before</em> shipping, so you never have to deal with "surprise" fees or held cargo.
+                            <strong>Stuck at Thai Customs? Let us help.</strong> We specialize in releasing held shipments. We handle the negotiations and paperwork to get your goods released fast.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -233,85 +234,123 @@ const ClearpostLanding = () => {
                 </div>
             </section>
 
-            {/* NEW: Rescue Section (Dark Red Theme) */}
-            <section id="rescue" className="py-20 bg-slate-950 border-y border-slate-900 relative overflow-hidden">
-                {/* Background Patterns */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 via-orange-500 to-slate-900"></div>
-                <div className="absolute -right-20 top-20 w-96 h-96 bg-red-900/20 rounded-full blur-3xl"></div>
 
-                <div className="max-w-7xl mx-auto px-4 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center gap-12">
-                        <div className="md:w-1/2">
-                            <div className="inline-flex items-center gap-2 text-red-400 font-bold uppercase tracking-wider mb-4 border border-red-900/50 px-3 py-1 rounded bg-red-950/30">
-                                <Siren size={16} className="animate-pulse" /> Emergency Service
-                            </div>
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                                Cargo Stuck at Customs? <br />
-                                <span className="text-red-500">We Rescue It.</span>
-                            </h2>
-                            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
-                                Other brokers might walk away when things get complicated. We don't.
-                                We specialize in resolving disputes, negotiating fines, and clearing shipments that are "held hostage" by paperwork errors.
-                            </p>
 
-                            <div className="grid grid-cols-1 gap-4">
-                                {[
-                                    { icon: Gavel, title: "Fine Negotiation", desc: "We talk to officers to minimize penalties and explain discrepancies." },
-                                    { icon: Unlock, title: "Permit Clearance", desc: "Missing FDA/TISI? We help you navigate the retrospective permit process." },
-                                ].map((item, idx) => (
-                                    <div key={idx} className="flex gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
-                                        <div className="bg-red-950/50 p-3 rounded-lg text-red-500 h-fit">
-                                            <item.icon size={24} />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-white font-bold">{item.title}</h4>
-                                            <p className="text-slate-500 text-sm">{item.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={startBooking}
-                                className="mt-8 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-red-900/40 hover:-translate-y-1 transition-transform w-full md:w-auto"
-                            >
-                                Request Immediate Rescue
-                            </button>
+            {/* NEW: Forms Identification Section */}
+            <section className="py-24 bg-slate-950 border-y border-slate-900 relative">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-sm font-medium mb-6">
+                            <FileSearch size={16} className="text-blue-400" />
+                            <span>Document Identification</span>
                         </div>
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                            Received one of these?
+                        </h2>
+                        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                            Don't panic. These are standard notification slips (Green Form / White Form).
+                            They simply mean your goods are held until duties are paid or permits are shown.
+                        </p>
+                    </div>
 
-                        <div className="md:w-1/2 relative">
-                            {/* Illustration of Locked Container */}
-                            <div className="bg-slate-900 rounded-3xl p-2 border border-slate-800 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
-                                <div className="bg-slate-950 rounded-2xl p-8 border border-slate-800/50">
-                                    <div className="flex items-center justify-between mb-8 pb-8 border-b border-slate-800">
-                                        <div>
-                                            <p className="text-xs text-slate-500 uppercase">Current Status</p>
-                                            <p className="text-red-500 font-mono text-xl font-bold tracking-widest flex items-center gap-2"><AlertTriangle size={20} /> HELD BY CUSTOMS</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xs text-slate-500 uppercase">Storage Fees</p>
-                                            <p className="text-white font-mono text-xl font-bold">฿ 4,500 / Day</p>
-                                        </div>
+                    {/* Mobile: Horizontal Scroll (Carousel) | Desktop: Grid */}
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 md:grid md:grid-cols-3 md:gap-8 max-w-7xl mx-auto md:overflow-visible no-scrollbar">
+                        {/* White Form */}
+                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
+                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                                <div className="aspect-[3/4] relative">
+                                    <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
+                                        Retained Receipt
                                     </div>
-
-                                    <div className="space-y-4">
-                                        <p className="text-slate-400 text-sm">Clearpost Action Plan:</p>
-                                        <div className="flex items-center gap-3 text-slate-300">
-                                            <div className="w-6 h-6 rounded bg-blue-900/50 flex items-center justify-center text-blue-400 text-xs font-bold">1</div>
-                                            <p>On-site physical inspection</p>
-                                        </div>
-                                        <div className="flex items-center gap-3 text-slate-300">
-                                            <div className="w-6 h-6 rounded bg-blue-900/50 flex items-center justify-center text-blue-400 text-xs font-bold">2</div>
-                                            <p>Re-assess tariff code with senior officer</p>
-                                        </div>
-                                        <div className="flex items-center gap-3 text-slate-300">
-                                            <div className="w-6 h-6 rounded bg-blue-900/50 flex items-center justify-center text-blue-400 text-xs font-bold">3</div>
-                                            <p>Amend entry & Release cargo</p>
-                                        </div>
-                                    </div>
+                                    <Image
+                                        src="/images/forms/customs-form-white.jpg"
+                                        alt="Thai Customs White Form - Passenger Detention"
+                                        fill
+                                        className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                    />
+                                </div>
+                                <div className="p-6 bg-slate-800 border-t border-slate-700">
+                                    <h3 className="text-xl font-bold text-white mb-2">Retained Item Receipt</h3>
+                                    <p className="text-slate-300 text-sm">Issued at the airport when baggage is retained for inspection or missing value proof.</p>
                                 </div>
                             </div>
+                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
+                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
+                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> We contact the airport customs officer to clear your baggage.</p>
+                            </div>
                         </div>
+
+                        {/* Green Form */}
+                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
+                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                                <div className="aspect-[3/4] relative flex flex-col">
+                                    <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
+                                        Assessment Receipt
+                                    </div>
+                                    <div className="relative h-1/2 w-full border-b border-black/20">
+                                        <Image
+                                            src="/images/forms/customs-form-green.jpg"
+                                            alt="Thai Customs Green Form - Front"
+                                            fill
+                                            className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                        />
+                                    </div>
+                                    <div className="relative h-1/2 w-full">
+                                        <Image
+                                            src="/images/forms/customs-form-green-back.jpg"
+                                            alt="Thai Customs Green Form - Back Instructions"
+                                            fill
+                                            className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="p-6 bg-slate-800 border-t border-slate-700">
+                                    <h3 className="text-xl font-bold text-white mb-2">Baggage Declaration</h3>
+                                    <p className="text-slate-300 text-sm">Issued at the airport for immediate duty payment disputes or fines.</p>
+                                </div>
+                            </div>
+                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
+                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
+                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> Don't pay until we review. We can often negotiate the valuation.</p>
+                            </div>
+                        </div>
+
+                        {/* Postal Form */}
+                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
+                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                                <div className="aspect-[3/4] relative">
+                                    <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
+                                        Postal Notification
+                                    </div>
+                                    <Image
+                                        src="/images/forms/customs-form-postal.jpg"
+                                        alt="Thai Customs Postal Notification Form"
+                                        fill
+                                        className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                    />
+                                </div>
+                                <div className="p-6 bg-slate-800 border-t border-slate-700">
+                                    <h3 className="text-xl font-bold text-white mb-2">Postal Items Collection</h3>
+                                    <p className="text-slate-300 text-sm">"Bai Jang" (ใบแจ้ง) sent to your home when a package is held at the Postal Customs Bureau.</p>
+                                </div>
+                            </div>
+                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
+                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
+                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> We go to Laksi Mail Center to assess and pay duties on your behalf.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-16 text-center">
+                        <button
+                            onClick={startBooking}
+                            className="inline-flex items-center gap-2 bg-slate-800 md:hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold border border-slate-600 transition-all md:hover:border-slate-500 group"
+                        >
+                            Upload Your Form <Upload size={20} className="md:group-hover:-translate-y-1 transition-transform" />
+                        </button>
+                        <p className="mt-4 text-slate-500 text-sm">
+                            Simply take a photo and upload it. We'll tell you what to do next.
+                        </p>
                     </div>
                 </div>
             </section>
@@ -356,8 +395,8 @@ const ClearpostLanding = () => {
                                 desc: "When things go wrong, nobody speaks English. You are left in the dark while storage fees pile up daily."
                             }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/50 transition-all duration-300 group hover:-translate-y-2">
-                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform ${item.color === 'red' ? 'bg-red-50 text-red-500' :
+                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 md:hover:shadow-2xl md:hover:shadow-slate-300/50 transition-all duration-300 group md:hover:-translate-y-2">
+                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 md:group-hover:scale-110 transition-transform ${item.color === 'red' ? 'bg-red-50 text-red-500' :
                                     item.color === 'orange' ? 'bg-orange-50 text-orange-500' :
                                         'bg-blue-50 text-blue-500'
                                     }`}>
@@ -373,17 +412,17 @@ const ClearpostLanding = () => {
                 </div>
             </section>
 
-            {/* Services Section */}
-            <section id="services" className="py-24 px-4 bg-white overflow-hidden relative">
+            {/* Services Section - Dark Theme for Balance */}
+            <section id="services" className="py-24 px-4 bg-slate-900 border-y border-slate-800 overflow-hidden relative">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid lg:grid-cols-2 gap-20 items-center">
 
                         {/* Left Content */}
                         <div className="order-2 lg:order-1">
-                            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 leading-tight">
-                                We are the <span className="text-blue-600">Antidote</span> to Logistics Chaos.
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
+                                We are the <span className="text-blue-500">Antidote</span> to Logistics Chaos.
                             </h2>
-                            <p className="text-slate-500 text-lg mb-10 leading-relaxed">
+                            <p className="text-slate-400 text-lg mb-10 leading-relaxed">
                                 We don't just "submit papers". We engineer a compliant path for your goods. Our job starts way before the ship leaves the port.
                             </p>
 
@@ -394,12 +433,12 @@ const ClearpostLanding = () => {
                                     { title: "Transparent Billing", desc: "You see the official Customs receipt. No markup on taxes. No hidden 'tea money'." },
                                 ].map((service, idx) => (
                                     <div key={idx} className="flex gap-6 group cursor-default">
-                                        <div className="mt-1 flex-shrink-0 w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
-                                            <CheckCircle className="text-blue-600 group-hover:text-white transition-colors" size={20} />
+                                        <div className="mt-1 flex-shrink-0 w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center group-hover:bg-blue-600 transition-colors border border-slate-700 group-hover:border-blue-500">
+                                            <CheckCircle className="text-blue-500 group-hover:text-white transition-colors" size={20} />
                                         </div>
                                         <div>
-                                            <h4 className="text-xl font-bold text-slate-900 mb-2">{service.title}</h4>
-                                            <p className="text-slate-500">{service.desc}</p>
+                                            <h4 className="text-xl font-bold text-white mb-2">{service.title}</h4>
+                                            <p className="text-slate-400">{service.desc}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -418,6 +457,70 @@ const ClearpostLanding = () => {
                     </div>
                 </div>
             </section>
+
+            {/* NEW: Pricing Section */}
+            <section id="pricing" className="py-24 px-4 bg-slate-50 border-b border-slate-200">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
+                            Usage Fees
+                        </h2>
+                        <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+                            Transparent pricing. No hidden "tea money".
+                        </p>
+                    </div>
+
+
+                    <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 border border-slate-200 rounded-2xl bg-white overflow-hidden text-center">
+                        {/* Tier 1: Postal Basic */}
+                        <div className="p-8 hover:bg-slate-50 transition-colors">
+                            <div className="h-12 flex items-center justify-center mb-6">
+                                <Image src="/images/logos/thailandpost.png" alt="Thailand Post" width={120} height={40} className="object-contain h-10 w-auto" />
+                            </div>
+                            <div className="text-slate-500 font-bold uppercase tracking-wider text-xs mb-4">Postal Service (Basic)</div>
+                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 800</div>
+                            <div className="space-y-2 text-sm text-slate-600">
+                                <p>Import via <strong>Thai Post</strong></p>
+                                <p>Value &le; 40,000 THB</p>
+                                <p>No License Required</p>
+                            </div>
+                        </div>
+
+                        {/* Tier 2: Postal Standard */}
+                        <div className="p-8 hover:bg-slate-50 transition-colors bg-slate-50/50">
+                            <div className="h-12 flex items-center justify-center mb-6">
+                                <Image src="/images/logos/thailandpost.png" alt="Thailand Post" width={120} height={40} className="object-contain h-10 w-auto" />
+                            </div>
+                            <div className="text-blue-600 font-bold uppercase tracking-wider text-xs mb-4">Postal Service (Standard)</div>
+                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 1,500</div>
+                            <div className="space-y-2 text-sm text-slate-600">
+                                <p>Import via <strong>Thai Post</strong></p>
+                                <p>Value &gt; 40,000 THB</p>
+                                <p className="text-blue-600 font-medium">OR License Required</p>
+                            </div>
+                        </div>
+
+                        {/* Tier 3: Airport / General */}
+                        <div className="p-8 hover:bg-slate-50 transition-colors">
+                            <div className="h-12 flex items-center justify-center gap-4 mb-6 px-4">
+                                <Image src="/images/logos/fedex.png" alt="FedEx" width={60} height={30} className="object-contain h-6 w-auto" />
+                                <Image src="/images/logos/dhl.png" alt="DHL" width={60} height={30} className="object-contain h-6 w-auto" />
+                                <Image src="/images/logos/ups.png" alt="UPS" width={60} height={30} className="object-contain h-8 w-auto" />
+                            </div>
+                            <div className="text-slate-500 font-bold uppercase tracking-wider text-xs mb-4">Airport / General</div>
+                            <div className="text-4xl font-bold text-slate-900 mb-6">฿ 4,500</div>
+                            <div className="space-y-2 text-sm text-slate-600">
+                                <p><strong>Suvarnabhumi Airport</strong></p>
+                                <p>Courier Imports</p>
+                                <p>Full Customs Entry</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Services Section */}
+
 
             {/* NEW: What We Clear (Grid) */}
             <section className="py-24 px-4 bg-slate-50">

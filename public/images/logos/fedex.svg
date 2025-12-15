@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <defs>
+    <style>
+      .fed { fill: #4D148C; font-family: Arial, sans-serif; font-weight: 900; }
+      .ex { fill: #FF6600; font-family: Arial, sans-serif; font-weight: 900; }
+    </style>
+  </defs>
+  <text x="10" y="45" font-size="50" class="fed">Fed</text>
+  <text x="96" y="45" font-size="50" class="ex">Ex</text>
+</svg>
