@@ -10,7 +10,11 @@ import {
     Send,
     ArrowRight,
     ArrowLeft,
-    ChevronRight
+    ChevronRight,
+    FileText,
+    FileSpreadsheet,
+    Image as ImageIcon,
+    File as FileIcon
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
@@ -91,18 +95,27 @@ export default function BookingWizard({ onClose }) {
 
     const handleFileChange = (e) => {
         if (e.target.files) {
+            const newFiles = Array.from(e.target.files).map(file =>
+                Object.assign(file, { preview: URL.createObjectURL(file) })
+            );
             setFormData(prev => ({
                 ...prev,
-                files: [...prev.files, ...Array.from(e.target.files)]
+                files: [...prev.files, ...newFiles]
             }));
         }
     };
 
     const removeFile = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            files: prev.files.filter((_, i) => i !== index)
-        }));
+        setFormData(prev => {
+            const fileToRemove = prev.files[index];
+            if (fileToRemove.preview) {
+                URL.revokeObjectURL(fileToRemove.preview);
+            }
+            return {
+                ...prev,
+                files: prev.files.filter((_, i) => i !== index)
+            };
+        });
     };
 
     const validateStep = async () => {
@@ -473,7 +486,7 @@ export default function BookingWizard({ onClose }) {
                                         <input
                                             type="file"
                                             multiple
-                                            accept="image/*,.pdf"
+                                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                             onChange={handleFileChange}
                                         />
@@ -485,16 +498,53 @@ export default function BookingWizard({ onClose }) {
                                     </div>
 
                                     {formData.files.length > 0 && (
-                                        <div className="space-y-2">
+                                        <div className="space-y-3">
                                             <p className="text-sm font-semibold text-slate-700">Attached Files:</p>
-                                            {formData.files.map((f, i) => (
-                                                <div key={i} className="flex justify-between items-center text-sm p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
-                                                    <span className="truncate max-w-[200px] text-slate-600">{f.name}</span>
-                                                    <button type="button" onClick={() => removeFile(i)} className="text-slate-400 hover:text-red-500">
-                                                        <X size={16} />
-                                                    </button>
-                                                </div>
-                                            ))}
+                                            {formData.files.map((f, i) => {
+                                                const ext = f.name.split('.').pop().toLowerCase();
+                                                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic'].includes(ext) || f.type.startsWith('image/');
+                                                const isPdf = ext === 'pdf';
+                                                const isExcell = ['xls', 'xlsx', 'csv'].includes(ext);
+                                                const isWord = ['doc', 'docx'].includes(ext);
+
+                                                return (
+                                                    <div key={i} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 shadow-sm animate-fade-in group">
+                                                        {/* Preview/Icon */}
+                                                        <div className="w-12 h-12 flex-shrink-0 bg-slate-50 rounded-lg overflow-hidden flex items-center justify-center border border-slate-100">
+                                                            {isImage ? (
+                                                                <img
+                                                                    src={f.preview}
+                                                                    alt={f.name}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            ) : isPdf ? (
+                                                                <FileText className="text-red-500" size={24} />
+                                                            ) : isExcell ? (
+                                                                <FileSpreadsheet className="text-green-600" size={24} />
+                                                            ) : isWord ? (
+                                                                <FileText className="text-blue-600" size={24} />
+                                                            ) : (
+                                                                <FileIcon className="text-slate-400" size={24} />
+                                                            )}
+                                                        </div>
+
+                                                        {/* Info */}
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-bold text-slate-700 truncate">{f.name}</p>
+                                                            <p className="text-xs text-slate-500">{(f.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                        </div>
+
+                                                        {/* Delete */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => removeFile(i)}
+                                                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                        >
+                                                            <X size={18} />
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
 
