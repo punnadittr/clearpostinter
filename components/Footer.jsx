@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Globe, Mail, Phone, MessageCircle, MapPin } from 'lucide-react';
 
 export default function Footer() {
@@ -52,8 +53,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-slate-900 text-center text-sm text-slate-600 flex flex-col md:flex-row justify-between items-center gap-4">
         <p>&copy; {new Date().getFullYear()} Clearpost Logistics Co., Ltd.</p>
         <div className="flex gap-6">
-          <a href="#" className="hover:text-slate-400">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-400">Terms of Service</a>
+          <Link href="/privacy" className="hover:text-slate-400">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-slate-400">Terms of Service</Link>
         </div>
       </div>
     </footer>

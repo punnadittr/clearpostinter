@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link'; // Added for navigation
+import Image from 'next/image'; // Optimized images
 import {
     ShieldCheck,
     FileSearch,
@@ -34,12 +35,11 @@ import {
     Utensils
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
+import TransparencyIllustration from '../components/TransparencyIllustration';
 
 const ClearpostLanding = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [showContactModal, setShowContactModal] = useState(false);
     const [showBookingWizard, setShowBookingWizard] = useState(false);
-    const [contactType, setContactType] = useState('general');
 
     const startBooking = () => {
         setShowBookingWizard(true);
@@ -56,64 +56,7 @@ const ClearpostLanding = () => {
         }
     };
 
-    const openEmergencyContact = () => {
-        setContactType('emergency');
-        setShowContactModal(true);
-    };
 
-    const ContactModal = () => (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md transition-opacity ${showContactModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-fade-in-up border-t-4 border-blue-600 overflow-hidden">
-                {/* Decorative background element */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-
-                {contactType === 'emergency' && (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-1 rounded-b-lg text-xs font-bold uppercase tracking-wide shadow-red-500/50 shadow-lg z-10 flex items-center gap-2">
-                        <Siren size={12} className="animate-pulse" /> Priority Rescue
-                    </div>
-                )}
-
-                <button
-                    onClick={() => setShowContactModal(false)}
-                    className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 z-10"
-                >
-                    <X size={24} />
-                </button>
-
-                <h3 className="text-2xl font-bold text-slate-800 mb-2 relative z-10">
-                    {contactType === 'emergency' ? 'Rescue Request' : 'Free Pre-Audit'}
-                </h3>
-                <p className="text-slate-600 mb-8 relative z-10">
-                    {contactType === 'emergency'
-                        ? "Send us your Tracking Number or Notice of Seizure. We will investigate the status immediately."
-                        : "Send us your invoice draft. We check HS Codes and valuation risks before you ship."}
-                </p>
-
-                <div className="space-y-4 relative z-10">
-                    <a href="#" className="flex items-center gap-4 p-4 bg-green-50 hover:bg-green-100 rounded-xl transition-all border border-green-100 group shadow-sm hover:shadow-md">
-                        <div className="bg-green-500 text-white p-3 rounded-full shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform">
-                            <MessageCircle size={24} />
-                        </div>
-                        <div>
-                            <p className="font-bold text-slate-800">WhatsApp Chat</p>
-                            <p className="text-xs font-medium text-green-600 uppercase tracking-wide">Fastest Response</p>
-                        </div>
-                        <ArrowRight className="ml-auto text-green-400 opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
-                    </a>
-
-                    <a href="#" className="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 rounded-xl transition-all border border-slate-200 group shadow-sm hover:shadow-md">
-                        <div className="bg-blue-600 text-white p-3 rounded-full shadow-lg shadow-blue-600/30 group-hover:scale-110 transition-transform">
-                            <Mail size={24} />
-                        </div>
-                        <div>
-                            <p className="font-bold text-slate-800">Email Inquiry</p>
-                            <p className="text-xs text-slate-500">contact@clearpost-th.com</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <div className="font-sans text-slate-600 bg-white min-h-screen selection:bg-blue-100 selection:text-blue-900">
@@ -223,12 +166,10 @@ const ClearpostLanding = () => {
                             </button>
 
                             <button
-                                onClick={openEmergencyContact}
-                                className="px-8 py-4 rounded-2xl font-bold text-lg bg-red-500/10 hover:bg-red-500/20 text-red-200 transition-all backdrop-blur-md border border-red-500/30 flex items-center justify-center gap-2 hover:border-red-500/60 hover:text-white group relative overflow-hidden"
+                                onClick={() => scrollToSection('services')}
+                                className="px-8 py-4 rounded-2xl font-bold text-lg bg-white/10 hover:bg-white/20 text-blue-100 transition-all backdrop-blur-md border border-white/10 flex items-center justify-center gap-2 hover:border-white/30 hover:text-white group"
                             >
-                                <div className="absolute inset-0 bg-red-600/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <LifeBuoy size={20} className="text-red-400 group-hover:text-white group-hover:animate-spin-slow relative z-10" />
-                                <span className="relative z-10">Goods Already Stuck?</span>
+                                <span className="relative z-10">Explore Services</span>
                             </button>
                         </div>
 
@@ -331,7 +272,7 @@ const ClearpostLanding = () => {
                             </div>
 
                             <button
-                                onClick={openEmergencyContact}
+                                onClick={startBooking}
                                 className="mt-8 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-red-900/40 hover:-translate-y-1 transition-transform w-full md:w-auto"
                             >
                                 Request Immediate Rescue
@@ -374,12 +315,22 @@ const ClearpostLanding = () => {
                     </div>
                 </div>
             </section>
-            {/* Pain Points Section */}
-            <section id="problems" className="py-24 px-4 bg-slate-50 relative">
-                <div className="max-w-7xl mx-auto">
+            {/* Pain Points Section - Light Theme with Subtle Texture */}
+            <section id="problems" className="py-24 px-4 relative overflow-hidden bg-slate-50">
+                {/* Background Image with Heavy White Overlay */}
+                <div className="absolute inset-0 z-0 opacity-10 mix-blend-multiply pointer-events-none">
+                    <Image
+                        src="/images/customs-chaos.png"
+                        alt="Background Texture"
+                        fill
+                        className="object-cover grayscale"
+                    />
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center mb-20">
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Why Importers Fear Thai Customs</h2>
-                        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light">
+                        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
                             The system isn't just strict; it's unpredictable. Here is what you are up against without a partner.
                         </p>
                     </div>
@@ -405,8 +356,11 @@ const ClearpostLanding = () => {
                                 desc: "When things go wrong, nobody speaks English. You are left in the dark while storage fees pile up daily."
                             }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 group">
-                                <div className={`w-16 h-16 bg-${item.color}-50 text-${item.color}-500 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
+                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-300/50 transition-all duration-300 group hover:-translate-y-2">
+                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform ${item.color === 'red' ? 'bg-red-50 text-red-500' :
+                                    item.color === 'orange' ? 'bg-orange-50 text-orange-500' :
+                                        'bg-blue-50 text-blue-500'
+                                    }`}>
                                     <item.icon size={32} strokeWidth={1.5} />
                                 </div>
                                 <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
@@ -455,25 +409,10 @@ const ClearpostLanding = () => {
                         {/* Right Image - "Nano/Pro" Style Abstract */}
                         <div className="order-1 lg:order-2 relative">
                             <div className="absolute inset-0 bg-blue-600 rounded-[3rem] rotate-3 opacity-5"></div>
-                            <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 group">
-                                <img
-                                    src="https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=1000&q=80"
-                                    alt="Secure Customs Clearance Process Thailand"
-                                    className="w-full h-[600px] object-cover group-hover:scale-105 transition-transform duration-700"
-                                />
+                            <div className="relative group">
+                                <TransparencyIllustration />
 
-                                {/* Overlay Badge */}
-                                <div className="absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/50">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-blue-600 text-white p-3 rounded-xl">
-                                            <ShieldCheck size={28} />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Guarantee</p>
-                                            <p className="text-xl font-bold text-slate-900">100% Tax Transparency</p>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -493,17 +432,25 @@ const ClearpostLanding = () => {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { icon: Package, title: "General Cargo", desc: "Furniture, Clothes, Machine Parts" },
-                            { icon: ChefHat, title: "Food & FDA", desc: "Supplements, Snacks, Drinks (FDA Required)" },
-                            { icon: Smartphone, title: "Electronics / TISI", desc: "Appliances, Servers, Radio Equipment" },
-                            { icon: User, title: "Personal Effects", desc: "Relocating to Thailand? Move duty-free." }
+                            { img: "/images/general.png", title: "General Cargo", desc: "Furniture, Clothes, Machine Parts" },
+                            { img: "/images/food.png", title: "Food & FDA", desc: "Supplements, Snacks, Drinks (FDA Required)" },
+                            { img: "/images/electronics.png", title: "Electronics / TISI", desc: "Appliances, Servers, Radio Equipment" },
+                            { img: "/images/personal.png", title: "Personal Effects", desc: "Relocating to Thailand? Move duty-free." }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all group">
-                                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                    <item.icon size={24} />
+                            <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full">
+                                <div className="h-48 relative overflow-hidden bg-slate-100">
+                                    <Image
+                                        src={item.img}
+                                        alt={item.title}
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-60"></div>
                                 </div>
-                                <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                                <p className="text-slate-500 text-sm">{item.desc}</p>
+                                <div className="p-6 flex-1 flex flex-col relative">
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{item.title}</h3>
+                                    <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -612,21 +559,35 @@ const ClearpostLanding = () => {
                         </p>
                     </div>
 
-                    <div className="relative grid md:grid-cols-3 gap-12">
-                        {/* Connector Line */}
-                        <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-slate-100 z-0"></div>
-
+                    <div className="grid md:grid-cols-3 gap-8 relative items-stretch">
                         {[
-                            { icon: FileText, title: "1. Send Docs", desc: "Upload your Invoice & Packing List draft for our pre-audit." },
-                            { icon: ShieldCheck, title: "2. We Clear", desc: "We pay duties, handle customs formalities, and release cargo." },
-                            { icon: Truck, title: "3. Delivery", desc: "We truck the goods from port/airport directly to your door." }
+                            { icon: FileText, step: "01", title: "Submit Documents", desc: "Upload your Invoice & Packing List draft via our secure portal for a free pre-audit check." },
+                            { icon: ShieldCheck, step: "02", title: "Customs Clearance", desc: "We handle duty calculations, paperless submissions, and official customs formalities." },
+                            { icon: Truck, step: "03", title: "Door Delivery", desc: "Once released, we truck your goods directly from the port or airport to your doorstep." }
                         ].map((step, idx) => (
-                            <div key={idx} className="relative z-10 text-center">
-                                <div className="w-24 h-24 bg-white border-4 border-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl">
-                                    <step.icon size={32} />
+                            <div key={idx} className="relative group">
+                                <div className="h-full bg-slate-50 rounded-[2rem] p-8 border border-slate-100 transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-1 hover:border-blue-100">
+                                    {/* Watermark Number */}
+                                    <div className="absolute top-6 right-8 text-6xl font-black text-slate-200/50 select-none group-hover:text-blue-50 transition-colors">
+                                        {step.step}
+                                    </div>
+
+                                    {/* Icon */}
+                                    <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-8 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                        <step.icon size={28} />
+                                    </div>
+
+                                    {/* Content */}
+                                    <h3 className="text-xl font-bold text-slate-900 mb-3 relative z-10">{step.title}</h3>
+                                    <p className="text-slate-500 leading-relaxed text-sm relative z-10">
+                                        {step.desc}
+                                    </p>
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-4">{step.title}</h3>
-                                <p className="text-slate-500 leading-relaxed px-4">{step.desc}</p>
+
+                                {/* Mobile Connector Line */}
+                                {idx !== 2 && (
+                                    <div className="md:hidden absolute left-1/2 bottom-[-32px] w-0.5 h-8 bg-slate-200 -translate-x-1/2"></div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -645,7 +606,12 @@ const ClearpostLanding = () => {
                             { q: "Do I need an import license?", a: "For personal effects, no. For commercial goods, you need to register as an importer (Paperless code) with Thai Customs. We can help you set this up in 1 day." },
                             { q: "How are duties calculated?", a: "Duties are based on the CIF value (Cost + Insurance + Freight) and the HS Code of your goods. VAT is always 7% on top of the Duty + CIF value." },
                             { q: "Can you clear food or cosmetics?", a: "Yes, but these require FDA permits *before* shipment. Do not ship without talking to us first, or your goods will be seized." },
-                            { q: "What if my goods are already stuck?", a: "Use our 'Rescue Service'. We will inspect the situation, negotiate with officers, and find a legal solution to release your cargo." }
+                            { q: "What if my goods are already stuck?", a: "Use our 'Rescue Service'. We will inspect the situation, negotiate with officers, and find a legal solution to release your cargo." },
+                            { q: "I ordered from Amazon/Alibaba. Do I still pay tax?", a: "Yes. If the total value (Goods + Shipping) exceeds 1,500 THB, you must pay Import Duty (0-30%) and VAT (7%). Couriers (DHL, FedEx) will not release the package until this is paid." },
+                            { q: "Can I import E-cigarettes or Sex Toys?", a: "Absolutely not. These items are strictly prohibited under Thai Law. They will be confiscated, and you may face fines or prosecution. We cannot clear these items." },
+                            { q: "My supplier paid for shipping. Why am I being charged?", a: "Your supplier likely paid for 'Freight' only (CIF terms). They did not pay Thai Import Duty & VAT. Unless your invoice clearly states 'DDP' (Delivered Duty Paid), the tax liability is 100% yours." },
+                            { q: "Can I bring my Drone?", a: "Drones are controlled by the NBTC. You must register it. If you arrive without a permit, Customs has the right to detain it at the airport until you complete the NBTC registration." },
+                            { q: "How long does the process take?", a: "Green Line (Standard): 24 hours. Red Line (Inspections): 2-4 days. Permit Processing (FDA/TISI): 1-3 weeks depending on the product complexity." }
                         ].map((faq, idx) => (
                             <details key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm group">
                                 <summary className="flex justify-between items-center p-6 cursor-pointer list-none font-bold text-slate-900 hover:text-blue-600 transition-colors">
@@ -681,7 +647,7 @@ const ClearpostLanding = () => {
                             Start Free Consultation
                         </button>
                         <button
-                            onClick={openEmergencyContact}
+                            onClick={startBooking}
                             className="bg-transparent border-2 border-slate-700 text-white hover:bg-slate-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all"
                         >
                             I Have a Stuck Shipment
@@ -690,10 +656,9 @@ const ClearpostLanding = () => {
                 </div>
             </section>
 
-           
+
 
             {/* Modal */}
-            {showContactModal && <ContactModal />}
             {showBookingWizard && <BookingWizard onClose={() => setShowBookingWizard(false)} />}
 
             {/* Floating WhatsApp Button (Mobile) */}

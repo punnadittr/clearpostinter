@@ -1,13 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Upload,
     CheckCircle,
     X,
     MessageCircle,
     Mail,
-    Send
+    Send,
+    ArrowRight,
+    ArrowLeft,
+    ChevronRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
@@ -44,8 +47,16 @@ const formSchema = yup.object().shape({
     licenseStatus: yup.string().required('Please indicate your license status')
 });
 
+const STEPS = [
+    { id: 1, title: 'Contact Info', fields: ['fullName', 'whatsappNumber', 'email'] },
+    { id: 2, title: 'Shipment', fields: ['shippingCarrier', 'itemDescription'] },
+    { id: 3, title: 'Problem', fields: ['currentStatus', 'licenseStatus'] },
+    { id: 4, title: 'Evidence', fields: [] }
+];
+
 export default function BookingWizard({ onClose }) {
     const router = useRouter();
+    const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [errors, setErrors] = useState({});
@@ -60,6 +71,14 @@ export default function BookingWizard({ onClose }) {
         licenseStatus: '',
         files: []
     });
+
+    // Scroll to top when changing steps
+    useEffect(() => {
+        const formContainer = document.getElementById('wizard-form-container');
+        if (formContainer) {
+            formContainer.scrollTop = 0;
+        }
+    }, [currentStep]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -86,14 +105,47 @@ export default function BookingWizard({ onClose }) {
         }));
     };
 
+    const validateStep = async () => {
+        const currentFields = STEPS[currentStep - 1].fields;
+        if (currentFields.length === 0) return true;
+
+        const newErrors = {};
+        let isValid = true;
+
+        for (const field of currentFields) {
+            try {
+                await yup.reach(formSchema, field).validate(formData[field]);
+            } catch (err) {
+                newErrors[field] = err.message;
+                isValid = false;
+            }
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    const handleNext = async () => {
+        const isValid = await validateStep();
+        if (isValid) {
+            setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
+        }
+    };
+
+    const handleBack = () => {
+        setCurrentStep(prev => Math.max(prev - 1, 1));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Final validation just in case
+        const isValid = await validateStep();
+        if (!isValid) return;
+
         setIsSubmitting(true);
 
         try {
-            await formSchema.validate(formData, { abortEarly: false });
-            setErrors({});
-
             let fileUrl = null;
 
             // Upload file to Supabase Storage if exists
@@ -138,18 +190,8 @@ export default function BookingWizard({ onClose }) {
 
             setIsSuccess(true);
         } catch (err) {
-            if (err.inner) {
-                const newErrors = {};
-                err.inner.forEach(error => {
-                    if (error.path) {
-                        newErrors[error.path] = error.message;
-                    }
-                });
-                setErrors(newErrors);
-            } else {
-                console.error('Submission error:', err);
-                alert('Something went wrong. Please try again.');
-            }
+            console.error('Submission error:', err);
+            alert('Something went wrong. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -206,238 +248,307 @@ export default function BookingWizard({ onClose }) {
                     <X size={24} />
                 </button>
 
-                {/* Header */}
-                <div className="p-6 md:p-8 border-b border-slate-100 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                    <h2 className="text-xl md:text-2xl font-bold mb-2 pr-8">
-                        Get Your Free Customs Clearance Assessment
+                {/* Header with Steps */}
+                <div className="p-6 pb-4 border-b border-slate-100 bg-white">
+                    <h2 className="text-xl font-bold text-slate-900 mb-6 pr-8">
+                        Get Your Free Assessment
                     </h2>
-                    <p className="text-blue-100 text-sm md:text-base">
-                        Please provide details below. We will review your case and contact you via WhatsApp within 1-2 hours.
-                    </p>
+
+                    {/* Progress Bar */}
+                    <div className="w-full px-4 sm:px-8">
+                        <div className="flex items-center justify-between w-full">
+                            {STEPS.map((step, index) => (
+                                <React.Fragment key={step.id}>
+                                    {/* Step Circle & Label Container */}
+                                    <div className="relative flex flex-col items-center z-10">
+                                        <div
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${currentStep >= step.id
+                                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 scale-110'
+                                                : 'bg-white border-2 border-slate-200 text-slate-400'
+                                                }`}
+                                        >
+                                            {currentStep > step.id ? <CheckCircle size={18} /> : step.id}
+                                        </div>
+                                        <span className={`absolute top-12 text-[10px] sm:text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors duration-300 ${currentStep >= step.id ? 'text-blue-600' : 'text-slate-400'
+                                            }`}>
+                                            {step.title}
+                                        </span>
+                                    </div>
+
+                                    {/* Connector Line (except after last step) */}
+                                    {index < STEPS.length - 1 && (
+                                        <div className="flex-1 mx-2 sm:mx-4 h-1 rounded-full bg-slate-100 relative">
+                                            <div
+                                                className="absolute inset-y-0 left-0 bg-blue-600 rounded-full transition-all duration-500 ease-out"
+                                                style={{ width: currentStep > index + 1 ? '100%' : '0%' }}
+                                            />
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                        {/* Spacer for labels */}
+                        <div className="h-6 sm:h-8"></div>
+                    </div>
                 </div>
 
                 {/* Form Content */}
-                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 md:p-8">
-                    <div className="space-y-8">
+                <form id="wizard-form-container" className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
+                    <div className="max-w-xl mx-auto">
 
-                        {/* Section 1: Contact Info */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">1</span>
-                                Contact Information
-                            </h3>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">Full Name *</label>
-                                    <input
-                                        type="text"
-                                        name="fullName"
-                                        placeholder="John Doe"
-                                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.fullName ? 'border-red-400' : 'border-slate-200 focus:border-blue-400'}`}
-                                        value={formData.fullName}
-                                        onChange={handleInputChange}
-                                    />
-                                    {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+                        {/* Step 1: Contact Info */}
+                        {currentStep === 1 && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="text-center mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900">Contact Information</h3>
+                                    <p className="text-slate-500 text-sm">Where should we send your assessment?</p>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                                        WhatsApp Number * <span className="text-green-600 text-xs font-normal">(Recommended for fastest response)</span>
-                                    </label>
-                                    <div className="relative">
-                                        <MessageCircle size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" />
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Full Name *</label>
                                         <input
-                                            type="tel"
-                                            name="whatsappNumber"
-                                            placeholder="+66 or your country code"
-                                            className={`w-full p-3 pl-10 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.whatsappNumber ? 'border-red-400' : 'border-slate-200 focus:border-blue-400'}`}
-                                            value={formData.whatsappNumber}
+                                            type="text"
+                                            name="fullName"
+                                            placeholder="John Doe"
+                                            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.fullName ? 'border-red-400 bg-red-50' : 'border-slate-200 focus:border-blue-400 bg-white'}`}
+                                            value={formData.fullName}
+                                            onChange={handleInputChange}
+                                            autoFocus
+                                        />
+                                        {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">
+                                            WhatsApp Number * <span className="text-green-600 text-xs font-normal">(Recommended)</span>
+                                        </label>
+                                        <div className="relative">
+                                            <MessageCircle size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-green-500" />
+                                            <input
+                                                type="tel"
+                                                name="whatsappNumber"
+                                                placeholder="+66 or your country code"
+                                                className={`w-full p-3 pl-10 border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.whatsappNumber ? 'border-red-400 bg-red-50' : 'border-slate-200 focus:border-blue-400 bg-white'}`}
+                                                value={formData.whatsappNumber}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        {errors.whatsappNumber && <p className="text-red-500 text-xs mt-1">{errors.whatsappNumber}</p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Email Address *</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="john@example.com"
+                                            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.email ? 'border-red-400 bg-red-50' : 'border-slate-200 focus:border-blue-400 bg-white'}`}
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                        />
+                                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Step 2: Shipment Details */}
+                        {currentStep === 2 && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="text-center mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900">Shipment Details</h3>
+                                    <p className="text-slate-500 text-sm">Tell us about your package.</p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Shipping Carrier *</label>
+                                        <select
+                                            name="shippingCarrier"
+                                            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.shippingCarrier ? 'border-red-400 bg-red-50' : 'border-slate-200 focus:border-blue-400 bg-white'}`}
+                                            value={formData.shippingCarrier}
+                                            onChange={handleInputChange}
+                                        >
+                                            {SHIPPING_CARRIERS.map(carrier => (
+                                                <option key={carrier.value} value={carrier.value}>{carrier.label}</option>
+                                            ))}
+                                        </select>
+                                        {errors.shippingCarrier && <p className="text-red-500 text-xs mt-1">{errors.shippingCarrier}</p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">Tracking Number <span className="text-slate-400 font-normal">(Optional)</span></label>
+                                        <input
+                                            type="text"
+                                            name="trackingNumber"
+                                            placeholder="e.g., EE123456789TH"
+                                            className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all bg-white"
+                                            value={formData.trackingNumber}
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    {errors.whatsappNumber && <p className="text-red-500 text-xs mt-1">{errors.whatsappNumber}</p>}
-                                </div>
 
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">Email Address *</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder="john@example.com"
-                                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.email ? 'border-red-400' : 'border-slate-200 focus:border-blue-400'}`}
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-                                    />
-                                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Section 2: Shipment Details */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">2</span>
-                                Shipment Details
-                            </h3>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">Shipping Carrier *</label>
-                                    <select
-                                        name="shippingCarrier"
-                                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all bg-white ${errors.shippingCarrier ? 'border-red-400' : 'border-slate-200 focus:border-blue-400'}`}
-                                        value={formData.shippingCarrier}
-                                        onChange={handleInputChange}
-                                    >
-                                        {SHIPPING_CARRIERS.map(carrier => (
-                                            <option key={carrier.value} value={carrier.value}>{carrier.label}</option>
-                                        ))}
-                                    </select>
-                                    {errors.shippingCarrier && <p className="text-red-500 text-xs mt-1">{errors.shippingCarrier}</p>}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">Tracking Number <span className="text-slate-400 font-normal">(Optional)</span></label>
-                                    <input
-                                        type="text"
-                                        name="trackingNumber"
-                                        placeholder="e.g., EE123456789TH"
-                                        className="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all"
-                                        value={formData.trackingNumber}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-semibold text-slate-700 mb-1">What is inside the package? (Be specific) *</label>
-                                    <textarea
-                                        name="itemDescription"
-                                        placeholder="e.g., 5kg of Supplements, 2 used iPhones, Personal Sex Toys, Cosmetics for sale."
-                                        rows={3}
-                                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none ${errors.itemDescription ? 'border-red-400' : 'border-slate-200 focus:border-blue-400'}`}
-                                        value={formData.itemDescription}
-                                        onChange={handleInputChange}
-                                    />
-                                    <p className="text-xs text-slate-500 mt-1">
-                                        🔒 Please be 100% honest so we can find the right solution for you. We value your privacy.
-                                    </p>
-                                    {errors.itemDescription && <p className="text-red-500 text-xs mt-1">{errors.itemDescription}</p>}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Section 3: The Problem */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">3</span>
-                                The Problem
-                            </h3>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-3">Current Status *</label>
-                                    <div className="space-y-2">
-                                        {CURRENT_STATUS_OPTIONS.map(option => (
-                                            <label key={option.value} className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-all hover:bg-slate-50 ${formData.currentStatus === option.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200'}`}>
-                                                <input
-                                                    type="radio"
-                                                    name="currentStatus"
-                                                    value={option.value}
-                                                    checked={formData.currentStatus === option.value}
-                                                    onChange={handleInputChange}
-                                                    className="mt-0.5 w-4 h-4 text-blue-600"
-                                                />
-                                                <span className="text-sm text-slate-700">{option.label}</span>
-                                            </label>
-                                        ))}
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1">What is inside the package? *</label>
+                                        <textarea
+                                            name="itemDescription"
+                                            placeholder="e.g., 5kg of Supplements, 2 used iPhones..."
+                                            rows={4}
+                                            className={`w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none ${errors.itemDescription ? 'border-red-400 bg-red-50' : 'border-slate-200 focus:border-blue-400 bg-white'}`}
+                                            value={formData.itemDescription}
+                                            onChange={handleInputChange}
+                                        />
+                                        <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                                            <span>🔒</span> Please be 100% honest. We value your privacy.
+                                        </p>
+                                        {errors.itemDescription && <p className="text-red-500 text-xs mt-1">{errors.itemDescription}</p>}
                                     </div>
-                                    {errors.currentStatus && <p className="text-red-500 text-xs mt-1">{errors.currentStatus}</p>}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-3">Do you have the required Import License? *</label>
-                                    <div className="space-y-2">
-                                        {LICENSE_STATUS_OPTIONS.map(option => (
-                                            <label key={option.value} className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-all hover:bg-slate-50 ${formData.licenseStatus === option.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200'}`}>
-                                                <input
-                                                    type="radio"
-                                                    name="licenseStatus"
-                                                    value={option.value}
-                                                    checked={formData.licenseStatus === option.value}
-                                                    onChange={handleInputChange}
-                                                    className="mt-0.5 w-4 h-4 text-blue-600"
-                                                />
-                                                <span className="text-sm text-slate-700">{option.label}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                    {errors.licenseStatus && <p className="text-red-500 text-xs mt-1">{errors.licenseStatus}</p>}
                                 </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Section 4: Evidence Upload */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <span className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm">4</span>
-                                Upload Evidence <span className="text-slate-400 font-normal text-sm">(Optional)</span>
-                            </h3>
+                        {/* Step 3: The Problem */}
+                        {currentStep === 3 && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="text-center mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900">Current Status</h3>
+                                    <p className="text-slate-500 text-sm">What issues are you facing?</p>
+                                </div>
 
-                            <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors relative">
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept="image/*,.pdf"
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    onChange={handleFileChange}
-                                />
-                                <Upload className="mx-auto text-slate-400 mb-3" size={28} />
-                                <p className="font-semibold text-slate-700 text-sm">Click to upload photo of Tracking status or Notification Slip</p>
-                                <p className="text-xs text-slate-500 mt-1">PDF, JPG, PNG accepted</p>
-                            </div>
-
-                            <p className="text-xs text-slate-500">
-                                💡 If you upload your notification slip, we can immediately see which tariff code applies and give you a more accurate assessment.
-                            </p>
-
-                            {formData.files.length > 0 && (
-                                <div className="space-y-2">
-                                    <p className="text-sm font-semibold text-slate-700">Attached Files:</p>
-                                    {formData.files.map((f, i) => (
-                                        <div key={i} className="flex justify-between items-center text-sm p-2 bg-slate-50 rounded border border-slate-100">
-                                            <span className="truncate max-w-[250px]">{f.name}</span>
-                                            <button type="button" onClick={() => removeFile(i)} className="text-red-500 hover:text-red-700 ml-2">
-                                                <X size={14} />
-                                            </button>
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-3">What is the status? *</label>
+                                        <div className="space-y-2">
+                                            {CURRENT_STATUS_OPTIONS.map(option => (
+                                                <label key={option.value} className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-all hover:bg-slate-50 ${formData.currentStatus === option.value ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 bg-white'}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="currentStatus"
+                                                        value={option.value}
+                                                        checked={formData.currentStatus === option.value}
+                                                        onChange={handleInputChange}
+                                                        className="mt-0.5 w-4 h-4 text-blue-600"
+                                                    />
+                                                    <span className="text-sm text-slate-700">{option.label}</span>
+                                                </label>
+                                            ))}
                                         </div>
-                                    ))}
+                                        {errors.currentStatus && <p className="text-red-500 text-xs mt-1">{errors.currentStatus}</p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-3">Do you have an Import License? *</label>
+                                        <div className="space-y-2">
+                                            {LICENSE_STATUS_OPTIONS.map(option => (
+                                                <label key={option.value} className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-all hover:bg-slate-50 ${formData.licenseStatus === option.value ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 bg-white'}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="licenseStatus"
+                                                        value={option.value}
+                                                        checked={formData.licenseStatus === option.value}
+                                                        onChange={handleInputChange}
+                                                        className="mt-0.5 w-4 h-4 text-blue-600"
+                                                    />
+                                                    <span className="text-sm text-slate-700">{option.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                        {errors.licenseStatus && <p className="text-red-500 text-xs mt-1">{errors.licenseStatus}</p>}
+                                    </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
+
+                        {/* Step 4: Evidence Upload */}
+                        {currentStep === 4 && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="text-center mb-6">
+                                    <h3 className="text-xl font-bold text-slate-900">Upload Evidence</h3>
+                                    <p className="text-slate-500 text-sm">Optional but helpful</p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors relative bg-white">
+                                        <input
+                                            type="file"
+                                            multiple
+                                            accept="image/*,.pdf"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={handleFileChange}
+                                        />
+                                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <Upload size={24} />
+                                        </div>
+                                        <p className="font-semibold text-slate-700">Click to upload documents</p>
+                                        <p className="text-xs text-slate-400 mt-2">Notification Slip, Tracking Screenshot, etc.</p>
+                                    </div>
+
+                                    {formData.files.length > 0 && (
+                                        <div className="space-y-2">
+                                            <p className="text-sm font-semibold text-slate-700">Attached Files:</p>
+                                            {formData.files.map((f, i) => (
+                                                <div key={i} className="flex justify-between items-center text-sm p-3 bg-white rounded-lg border border-slate-100 shadow-sm">
+                                                    <span className="truncate max-w-[200px] text-slate-600">{f.name}</span>
+                                                    <button type="button" onClick={() => removeFile(i)} className="text-slate-400 hover:text-red-500">
+                                                        <X size={16} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    <div className="bg-blue-50 p-4 rounded-xl flex gap-3 text-sm text-blue-800">
+                                        <span className="text-2xl">💡</span>
+                                        <p>Uploading the "Notification Slip" allows us to see the exact tariff code and give you the most accurate assessment.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                     </div>
                 </form>
 
-                {/* Footer / Submit */}
-                <div className="p-6 border-t border-slate-100 bg-slate-50">
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        className="w-full px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-500 hover:to-blue-600 shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-                    >
-                        {isSubmitting ? (
-                            'Processing...'
-                        ) : (
-                            <>
-                                <Send size={20} />
-                                Assess My Case Now
-                            </>
+                {/* Footer Navigation */}
+                <div className="p-4 md:p-6 border-t border-slate-100 bg-white">
+                    <div className="flex gap-3 max-w-xl mx-auto">
+                        {currentStep > 1 && (
+                            <button
+                                type="button"
+                                onClick={handleBack}
+                                className="px-6 py-4 rounded-xl font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
                         )}
-                    </button>
-                    <p className="text-xs text-slate-400 text-center mt-3">
-                        🔒 Your data is strictly confidential and used only for customs assessment purposes.
-                    </p>
+
+                        {currentStep < 4 ? (
+                            <button
+                                type="button"
+                                onClick={handleNext}
+                                className="flex-1 px-8 py-4 rounded-xl font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-lg flex items-center justify-center gap-2 transition-all group"
+                            >
+                                Next Step
+                                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        ) : (
+                            <button
+                                type="submit"
+                                onClick={handleSubmit}
+                                disabled={isSubmitting}
+                                className="flex-1 px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-500 hover:to-blue-600 shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                            >
+                                {isSubmitting ? (
+                                    'Processing...'
+                                ) : (
+                                    <>
+                                        Submit Request
+                                        <Send size={20} />
+                                    </>
+                                )}
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
