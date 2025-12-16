@@ -29,16 +29,29 @@ const SHIPPING_CARRIERS = [
 ];
 
 const CURRENT_STATUS_OPTIONS = [
-    { value: 'notification', label: 'I received a "Collection Notification" slip (ใบแจ้งให้ไปรับของ)' },
-    { value: 'held', label: 'Tracking status says "Held by Customs"' },
-    { value: 'documents', label: "Courier (DHL/FedEx) asks for documents I don't have" },
-    { value: 'preimport', label: "Shipping hasn't arrived yet (Pre-import consultation)" }
+    { value: 'notification', label: 'I received a "Collection Notification" slip (ใบแจ้งให้ไปรับของ)', allowedCarriers: ['thaipost'] },
+    { value: 'held', label: 'Tracking status says "Held by Customs"', allowedCarriers: ['thaipost', 'express', 'freight'] },
+    { value: 'documents', label: "Courier (DHL/FedEx) asks for documents I don't have", allowedCarriers: ['express'] },
+    { value: 'freight_arrival', label: "Airline/Forwarder notified me of arrival", allowedCarriers: ['freight'] },
+    { value: 'baggage_retained', label: "My baggage was retained at the airport (I have a receipt)", allowedCarriers: ['handcarry'] },
+    { value: 'preimport', label: "Shipping hasn't arrived yet (Pre-import consultation)", allowedCarriers: ['thaipost', 'express', 'freight', 'handcarry'] }
 ];
 
 const LICENSE_STATUS_OPTIONS = [
     { value: 'yes', label: 'Yes, I have all documents' },
     { value: 'no', label: "No, I don't have an Import License" },
     { value: 'unknown', label: "I don't know what is needed" }
+];
+
+const EXAMPLE_DOCUMENTS = [
+    { src: '/assets/examples/thai-post-notification.png', label: 'Notification Slip', desc: 'Blue/White Card', allowedCarriers: ['thaipost'] },
+    { src: '/assets/examples/waybill.jpg', label: 'Airway Bill', desc: 'Tracking Label', allowedCarriers: ['express'] },
+    { src: '/assets/examples/cargo-awb.jpg', label: 'Airway Bill', desc: 'Cargo Format', allowedCarriers: ['freight'] },
+    { src: '/assets/examples/invoice.jpg', label: 'Invoice', desc: 'Product Details', allowedCarriers: ['express', 'freight'] },
+    { src: '/assets/examples/customs-receipt.jpg', label: 'Customs Receipt', desc: 'White Form', allowedCarriers: ['handcarry'] },
+    { src: '/assets/examples/customs-receipt-green.jpg', label: 'Customs Receipt', desc: 'Green Form', allowedCarriers: ['handcarry'] },
+    { src: '/assets/examples/handcarry-invoice.jpg', label: 'Invoice', desc: 'Proof of Purchase', allowedCarriers: ['handcarry'] },
+    { src: '/assets/examples/receipt.jpg', label: 'Purchase Receipt', desc: 'Proof of Payment', allowedCarriers: ['thaipost'] }
 ];
 
 const formSchema = yup.object().shape({
@@ -60,6 +73,7 @@ const STEPS = [
 
 export default function BookingWizard({ onClose }) {
     const router = useRouter();
+    const [viewingImage, setViewingImage] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -433,7 +447,7 @@ export default function BookingWizard({ onClose }) {
                                     <div>
                                         <label className="block text-sm font-semibold text-slate-700 mb-3">What is the status? *</label>
                                         <div className="space-y-2">
-                                            {CURRENT_STATUS_OPTIONS.map(option => (
+                                            {CURRENT_STATUS_OPTIONS.filter(opt => opt.allowedCarriers.includes(formData.shippingCarrier)).map(option => (
                                                 <label key={option.value} className={`flex items-start gap-3 p-3 border rounded-xl cursor-pointer transition-all hover:bg-slate-50 ${formData.currentStatus === option.value ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 bg-white'}`}>
                                                     <input
                                                         type="radio"
@@ -479,6 +493,44 @@ export default function BookingWizard({ onClose }) {
                                 <div className="text-center mb-6">
                                     <h3 className="text-xl font-bold text-slate-900">Upload Evidence</h3>
                                     <p className="text-slate-500 text-sm">Optional but helpful</p>
+                                </div>
+
+                                {/* Example Documents Gallery */}
+                                <div className="mb-6">
+                                    <p className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                                        <span>👀</span> Helpful Examples (Scroll to view)
+                                    </p>
+
+                                    <div className="flex overflow-x-auto pb-4 gap-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+                                        {EXAMPLE_DOCUMENTS
+                                            .filter(doc => doc.allowedCarriers.includes(formData.shippingCarrier))
+                                            .map((doc, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="snap-start flex-shrink-0 w-32 md:w-40 flex flex-col gap-2 group cursor-zoom-in"
+                                                    onClick={() => setViewingImage(doc)}
+                                                >
+                                                    <div className="aspect-[3/4] rounded-xl overflow-hidden border border-slate-200 shadow-sm relative bg-slate-50 transition-all group-hover:shadow-md group-hover:border-blue-200">
+                                                        <img
+                                                            src={doc.src}
+                                                            alt={doc.label}
+                                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                        />
+                                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                                            <div className="bg-white/90 rounded-full p-1.5 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                                                <div className="w-4 h-4 text-slate-900">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-center px-1">
+                                                        <p className="text-xs font-bold text-slate-700 leading-tight">{doc.label}</p>
+                                                        <p className="text-[10px] text-slate-500 mt-0.5">{doc.desc}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
                                 </div>
 
                                 <div className="space-y-4">
@@ -601,6 +653,29 @@ export default function BookingWizard({ onClose }) {
                     </div>
                 </div>
             </div>
+
+            {/* Image Lightbox */}
+            {viewingImage && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-fade-in" onClick={() => setViewingImage(null)}>
+                    <button
+                        className="absolute top-4 right-4 text-white/70 hover:text-white p-2 transition-colors"
+                        onClick={() => setViewingImage(null)}
+                    >
+                        <X size={32} />
+                    </button>
+                    <div className="relative max-w-4xl w-full flex flex-col items-center" onClick={e => e.stopPropagation()}>
+                        <img
+                            src={viewingImage.src}
+                            alt={viewingImage.label}
+                            className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                        />
+                        <div className="mt-4 text-white text-center">
+                            <p className="font-bold text-lg">{viewingImage.label}</p>
+                            <p className="text-slate-300">{viewingImage.desc}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

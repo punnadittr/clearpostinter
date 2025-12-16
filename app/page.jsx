@@ -272,7 +272,7 @@ const ClearpostLanding = () => {
                                     />
                                 </div>
                                 <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Retained Item Receipt</h3>
+                                    <h3 className="text-xl font-bold text-white mb-2">Customs Receipt (White)</h3>
                                     <p className="text-slate-300 text-sm">Issued at the airport when baggage is retained for inspection or missing value proof.</p>
                                 </div>
                             </div>
@@ -307,7 +307,7 @@ const ClearpostLanding = () => {
                                     </div>
                                 </div>
                                 <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Baggage Declaration</h3>
+                                    <h3 className="text-xl font-bold text-white mb-2">Customs Receipt (Green)</h3>
                                     <p className="text-slate-300 text-sm">Issued at the airport for immediate duty payment disputes or fines.</p>
                                 </div>
                             </div>
@@ -332,7 +332,7 @@ const ClearpostLanding = () => {
                                     />
                                 </div>
                                 <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Postal Items Collection</h3>
+                                    <h3 className="text-xl font-bold text-white mb-2">Postal Notification</h3>
                                     <p className="text-slate-300 text-sm">"Bai Jang" (ใบแจ้ง) sent to your home when a package is held at the Postal Customs Bureau.</p>
                                 </div>
                             </div>
