@@ -435,8 +435,8 @@ const ClearpostLanding = () => {
                                     { title: "Transparent Billing", desc: "You see the official Customs receipt. No markup on taxes. No hidden 'tea money'." },
                                 ].map((service, idx) => (
                                     <div key={idx} className="flex gap-6 group cursor-default">
-                                        <div className="mt-1 flex-shrink-0 w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center group-hover:bg-blue-600 transition-colors border border-slate-700 group-hover:border-blue-500">
-                                            <CheckCircle className="text-blue-500 group-hover:text-white transition-colors" size={20} />
+                                        <div className="mt-1 flex-shrink-0 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center border border-blue-500 shadow-lg shadow-blue-900/20">
+                                            <CheckCircle className="text-white" size={20} />
                                         </div>
                                         <div>
                                             <h4 className="text-xl font-bold text-white mb-2">{service.title}</h4>
