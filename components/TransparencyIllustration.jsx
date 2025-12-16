@@ -3,7 +3,7 @@ import { Check, ShieldCheck, FileText, Download } from 'lucide-react';
 
 export default function TransparencyIllustration() {
     return (
-        <div className="w-full h-[600px] bg-transparent relative flex items-center justify-center perspective-[2000px]">
+        <div className="w-full h-auto py-10 md:h-[600px] md:py-0 bg-transparent relative flex items-center justify-center perspective-[2000px]">
 
 
 

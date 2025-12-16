@@ -34,7 +34,13 @@ import {
     Ship,
     ScrollText,
     Settings,
-    Utensils
+    Utensils,
+    Maximize2,
+    Pill,
+    Sparkles,
+    Cpu,
+    Armchair,
+
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
 import TransparencyIllustration from '../components/TransparencyIllustration';
@@ -43,6 +49,7 @@ import Footer from '../components/Footer';
 const ClearpostLanding = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showBookingWizard, setShowBookingWizard] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const startBooking = () => {
         setShowBookingWizard(true);
@@ -76,7 +83,7 @@ const ClearpostLanding = () => {
                         </div>
 
                         {/* Desktop Menu - Modified for Dark BG */}
-                        <div className="hidden md:flex space-x-1 items-center bg-white/5 p-1.5 rounded-full border border-white/10">
+                        <div className="hidden lg:flex space-x-1 items-center bg-white/5 p-1.5 rounded-full border border-white/10">
                             <button onClick={() => scrollToSection('problems')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">Problems</button>
                             <button onClick={() => scrollToSection('rescue')} className="px-5 py-2 rounded-full text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all font-medium text-sm flex items-center gap-2"><LifeBuoy size={16} /> Rescue Service</button>
                             <button onClick={() => scrollToSection('services')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">All Services</button>
@@ -86,7 +93,7 @@ const ClearpostLanding = () => {
                             </Link>
                         </div>
 
-                        <div className="hidden md:block">
+                        <div className="hidden lg:block">
                             <button
                                 onClick={startBooking}
                                 className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-lg shadow-blue-600/20 hover:shadow-blue-600/40 hover:-translate-y-0.5"
@@ -96,7 +103,7 @@ const ClearpostLanding = () => {
                         </div>
 
                         {/* Mobile Menu Button - White Icon */}
-                        <div className="md:hidden">
+                        <div className="lg:hidden">
                             <button onClick={toggleMenu} className="p-2 text-slate-300 hover:bg-white/10 hover:text-white rounded-lg transition-colors">
                                 {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
@@ -106,7 +113,7 @@ const ClearpostLanding = () => {
 
                 {/* Mobile Menu Dropdown - Dark Theme */}
                 {isMenuOpen && (
-                    <div className="md:hidden bg-slate-900 border-t border-slate-800 absolute w-full shadow-2xl animate-in slide-in-from-top-5">
+                    <div className="lg:hidden bg-slate-900 border-t border-slate-800 absolute w-full shadow-2xl animate-in slide-in-from-top-5">
                         <div className="px-4 pt-4 pb-8 space-y-2">
                             <button onClick={() => scrollToSection('problems')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Why Us</button>
                             <button onClick={() => scrollToSection('rescue')} className="block w-full text-left px-4 py-4 text-red-400 bg-red-900/20 hover:bg-red-900/30 font-bold rounded-xl flex items-center gap-2"><LifeBuoy size={20} /> Rescue Service</button>
@@ -129,7 +136,7 @@ const ClearpostLanding = () => {
             </nav>
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white relative overflow-hidden min-h-[90vh] flex items-center">
+            <section className="pt-32 pb-20 bg-slate-900 text-white relative overflow-hidden min-h-[90vh] flex items-center w-full">
                 {/* Abstract 3D Background */}
                 <div className="absolute inset-0 z-0">
                     <img
@@ -143,7 +150,7 @@ const ClearpostLanding = () => {
                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[128px] animate-pulse delay-700"></div>
                 </div>
 
-                <div className="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-2 gap-16 items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-16 items-center">
                     <div>
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-blue-100 text-sm font-medium mb-8 hover:bg-white/20 transition-colors cursor-default">
                             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></span>
@@ -236,8 +243,6 @@ const ClearpostLanding = () => {
                 </div>
             </section>
 
-
-
             {/* NEW: Forms Identification Section */}
             <section className="py-24 bg-slate-950 border-y border-slate-900 relative">
                 <div className="max-w-7xl mx-auto px-4">
@@ -256,10 +261,13 @@ const ClearpostLanding = () => {
                     </div>
 
                     {/* Mobile: Horizontal Scroll (Carousel) | Desktop: Grid */}
-                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 md:grid md:grid-cols-3 md:gap-8 max-w-7xl mx-auto md:overflow-visible no-scrollbar">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 lg:grid lg:grid-cols-3 lg:gap-8 max-w-7xl mx-auto lg:overflow-visible no-scrollbar">
                         {/* White Form */}
-                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
-                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                        <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
+                            <div
+                                onClick={() => setSelectedImage("/images/forms/customs-form-white.jpg")}
+                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                            >
                                 <div className="aspect-[3/4] relative">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Retained Receipt
@@ -269,23 +277,28 @@ const ClearpostLanding = () => {
                                         alt="Thai Customs White Form - Passenger Detention"
                                         fill
                                         sizes="(max-width: 768px) 100vw, 33vw"
-                                        className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                        className="object-cover opacity-90 lg:group-hover:opacity-100 transition-opacity"
                                     />
+                                    {/* Zoom Hint Overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-opacity bg-black/20">
+                                        <div className="bg-black/60 text-white p-3 rounded-full backdrop-blur-sm">
+                                            <Maximize2 size={24} />
+                                        </div>
+                                    </div>
+                                    {/* Mobile Hint (Always visible but subtle) */}
+                                    <div className="lg:hidden absolute bottom-3 right-3 bg-black/60 text-white p-2 rounded-full backdrop-blur-sm">
+                                        <Maximize2 size={16} />
+                                    </div>
                                 </div>
-                                <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Customs Receipt (White)</h3>
-                                    <p className="text-slate-300 text-sm">Issued at the airport when baggage is retained for inspection or missing value proof.</p>
-                                </div>
-                            </div>
-                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
-                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
-                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> We contact the airport customs officer to clear your baggage.</p>
                             </div>
                         </div>
 
                         {/* Green Form */}
-                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
-                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                        <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
+                            <div
+                                onClick={() => setSelectedImage("/images/forms/customs-form-green.jpg")}
+                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                            >
                                 <div className="aspect-[3/4] relative flex flex-col">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Assessment Receipt
@@ -296,7 +309,7 @@ const ClearpostLanding = () => {
                                             alt="Thai Customs Green Form - Front"
                                             fill
                                             sizes="(max-width: 768px) 100vw, 33vw"
-                                            className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                            className="object-cover opacity-90 lg:group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
                                     <div className="relative h-1/2 w-full">
@@ -305,24 +318,29 @@ const ClearpostLanding = () => {
                                             alt="Thai Customs Green Form - Back Instructions"
                                             fill
                                             sizes="(max-width: 768px) 100vw, 33vw"
-                                            className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                            className="object-cover opacity-90 lg:group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
+                                    {/* Zoom Hint Overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-opacity bg-black/20">
+                                        <div className="bg-black/60 text-white p-3 rounded-full backdrop-blur-sm">
+                                            <Maximize2 size={24} />
+                                        </div>
+                                    </div>
+                                    {/* Mobile Hint */}
+                                    <div className="lg:hidden absolute bottom-3 right-3 bg-black/60 text-white p-2 rounded-full backdrop-blur-sm">
+                                        <Maximize2 size={16} />
+                                    </div>
                                 </div>
-                                <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Customs Receipt (Green)</h3>
-                                    <p className="text-slate-300 text-sm">Issued at the airport for immediate duty payment disputes or fines.</p>
-                                </div>
-                            </div>
-                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
-                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
-                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> Don't pay until we review. We can often negotiate the valuation.</p>
                             </div>
                         </div>
 
                         {/* Postal Form */}
-                        <div className="space-y-6 group min-w-[85vw] md:min-w-0 snap-center">
-                            <div className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 md:group-hover:-translate-y-2 transform-gpu">
+                        <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
+                            <div
+                                onClick={() => setSelectedImage("/images/forms/customs-form-postal.jpg")}
+                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                            >
                                 <div className="aspect-[3/4] relative">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Postal Notification
@@ -332,65 +350,80 @@ const ClearpostLanding = () => {
                                         alt="Thai Customs Postal Notification Form"
                                         fill
                                         sizes="(max-width: 768px) 100vw, 33vw"
-                                        className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
+                                        className="object-cover opacity-90 lg:group-hover:opacity-100 transition-opacity"
                                     />
+                                    {/* Zoom Hint Overlay */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 lg:group-hover:opacity-100 transition-opacity bg-black/20">
+                                        <div className="bg-black/60 text-white p-3 rounded-full backdrop-blur-sm">
+                                            <Maximize2 size={24} />
+                                        </div>
+                                    </div>
+                                    {/* Mobile Hint */}
+                                    <div className="lg:hidden absolute bottom-3 right-3 bg-black/60 text-white p-2 rounded-full backdrop-blur-sm">
+                                        <Maximize2 size={16} />
+                                    </div>
                                 </div>
-                                <div className="p-6 bg-slate-800 border-t border-slate-700">
-                                    <h3 className="text-xl font-bold text-white mb-2">Postal Notification</h3>
-                                    <p className="text-slate-300 text-sm">"Bai Jang" (ใบแจ้ง) sent to your home when a package is held at the Postal Customs Bureau.</p>
-                                </div>
-                            </div>
-                            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 flex items-start gap-3">
-                                <CheckCircle className="text-green-500 shrink-0 mt-0.5" size={20} />
-                                <p className="text-slate-400 text-sm"><span className="text-white font-bold">We handle this.</span> We go to Laksi Mail Center to assess and pay duties on your behalf.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-16 text-center">
+                    {/* Consolidated "We Handle This" Banner */}
+                    <div className="max-w-3xl mx-auto mt-8 mb-10">
+                        <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
+                            <div className="bg-green-500 text-white p-3 rounded-full shrink-0">
+                                <CheckCircle size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-white">We handle all of these.</h3>
+                                <p className="text-slate-300 text-sm">Whether it's a white slip, green slip, or postal notification — we can clear it for you.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 text-center">
                         <button
                             onClick={startBooking}
-                            className="inline-flex items-center gap-2 bg-slate-800 md:hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold border border-slate-600 transition-all md:hover:border-slate-500 group"
+                            className="inline-flex items-center gap-2 bg-slate-800 lg:hover:bg-slate-700 text-white px-8 py-4 rounded-xl font-bold border border-slate-600 transition-all lg:hover:border-slate-500 group"
                         >
-                            Upload Your Form <Upload size={20} className="md:group-hover:-translate-y-1 transition-transform" />
+                            Upload Your Form <Upload size={20} className="lg:group-hover:-translate-y-1 transition-transform" />
                         </button>
                         <p className="mt-4 text-slate-500 text-sm">
                             Simply take a photo and upload it. We'll tell you what to do next.
                         </p>
                     </div>
                 </div>
-            </section>
-            {/* Pain Points Section - Light Theme with Subtle Texture */}
+            </section >
+            {/* Pain Points Section - Light Theme with Dramatic Feeling */}
             <section id="problems" className="py-24 px-4 relative overflow-hidden bg-slate-50">
-                {/* Background Image with Heavy White Overlay */}
-                <div className="absolute inset-0 z-0 opacity-10 mix-blend-multiply pointer-events-none">
-                    <Image
-                        src="/images/customs-chaos.png"
-                        alt="Background Texture"
-                        fill
-                        sizes="100vw"
-                        className="object-cover grayscale"
-                    />
+                {/* Background Texture & Gradients - REMOVED for cleanliness */}
+                <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
+                    {/* Clean slate background only */}
                 </div>
 
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center mb-20">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">Why Importers Fear Thai Customs</h2>
-                        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
-                            The system isn't just strict; it's unpredictable. Here is what you are up against without a partner.
+                        <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-red-200 bg-red-50 text-red-600 text-sm font-bold uppercase tracking-widest animate-pulse">
+                            Warning: High Risk
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+                            Why Importers <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">Fear</span> Thai Customs
+                        </h2>
+                        <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-light leading-relaxed">
+                            The system isn't just strict; it's unpredictable. <br className="hidden md:block" />
+                            Here is what you are up against without a partner.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
                             {
-                                icon: AlertTriangle,
+                                icon: Siren,
                                 color: "red",
                                 title: "The Valuation Trap",
                                 desc: "Officers may ignore your invoice value and 'estimate' a higher price using their own database, forcing you to pay double taxes."
                             },
                             {
-                                icon: Package,
+                                icon: Gavel,
                                 color: "orange",
                                 title: "Seized Goods",
                                 desc: "Missing a minor permit (like FDA or TISI) results in immediate seizure. Once seized, it's nearly impossible to get back."
@@ -401,18 +434,29 @@ const ClearpostLanding = () => {
                                 title: "Silent Treatment",
                                 desc: "When things go wrong, nobody speaks English. You are left in the dark while storage fees pile up daily."
                             }
+
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/50 md:hover:shadow-2xl md:hover:shadow-slate-300/50 transition-all duration-300 group md:hover:-translate-y-2">
-                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 md:group-hover:scale-110 transition-transform ${item.color === 'red' ? 'bg-red-50 text-red-500' :
-                                    item.color === 'orange' ? 'bg-orange-50 text-orange-500' :
-                                        'bg-blue-50 text-blue-500'
-                                    }`}>
-                                    <item.icon size={32} strokeWidth={1.5} />
+                            <div key={idx} className="group relative p-1 rounded-3xl bg-gradient-to-b from-white to-slate-100 border border-slate-200 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-red-900/10 transition-all duration-500 lg:hover:-translate-y-2">
+                                <div className="absolute inset-0 bg-white rounded-[22px] opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                                <div className="relative h-full p-6 md:p-10 rounded-[22px] overflow-hidden">
+                                    {/* Inner Color Accent */}
+                                    <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] opacity-20 transition-opacity duration-500 lg:group-hover:opacity-40 ${item.color === 'red' ? 'bg-red-500' :
+                                        item.color === 'orange' ? 'bg-orange-500' :
+                                            'bg-blue-500'
+                                        }`}></div>
+
+                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-transform duration-500 lg:group-hover:scale-110 lg:group-hover:rotate-3 ${item.color === 'red' ? 'bg-red-50 text-red-600 border border-red-100' :
+                                        item.color === 'orange' ? 'bg-orange-50 text-orange-600 border border-orange-100' :
+                                            'bg-blue-50 text-blue-600 border border-blue-100'
+                                        }`}>
+                                        <item.icon size={32} strokeWidth={1.5} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
+                                    <p className="text-slate-600 leading-relaxed">
+                                        {item.desc}
+                                    </p>
                                 </div>
-                                <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    {item.desc}
-                                </p>
                             </div>
                         ))}
                     </div>
@@ -420,7 +464,7 @@ const ClearpostLanding = () => {
             </section>
 
             {/* Services Section - Dark Theme for Balance */}
-            <section id="services" className="py-24 px-4 bg-slate-900 border-y border-slate-800 overflow-hidden relative">
+            < section id="services" className="py-24 px-4 bg-slate-900 border-y border-slate-800 overflow-hidden relative" >
                 <div className="max-w-7xl mx-auto">
                     <div className="grid lg:grid-cols-2 gap-20 items-center">
 
@@ -463,11 +507,17 @@ const ClearpostLanding = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* NEW: Pricing Section */}
-            <section id="pricing" className="py-24 px-4 bg-slate-50 border-b border-slate-200">
-                <div className="max-w-7xl mx-auto">
+            <section id="pricing" className="py-24 px-4 bg-slate-50 border-b border-slate-200 relative overflow-hidden">
+                {/* Abstract Background Shapes - Clustered around cards */}
+                <div className="absolute top-1/3 right-10 w-72 h-72 rounded-full bg-blue-400/20 blur-3xl animate-pulse mix-blend-multiply"></div>
+                <div className="absolute bottom-1/3 left-10 w-72 h-72 rounded-full bg-purple-400/20 blur-3xl animate-pulse delay-700 mix-blend-multiply"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-indigo-200/40 rounded-full pointer-events-none animate-[spin_60s_linear_infinite] opacity-50"></div>
+                <div className="absolute top-1/3 left-20 w-16 h-16 border-4 border-orange-300/40 rounded-2xl rotate-12 animate-[bounce_4s_infinite]"></div>
+                <div className="absolute bottom-1/3 right-20 w-24 h-24 bg-emerald-300/20 rounded-full mix-blend-multiply animate-pulse delay-1000"></div>
+                <div className="max-w-5xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
                             Usage Fees
@@ -477,96 +527,77 @@ const ClearpostLanding = () => {
                         </p>
                     </div>
 
+                    {/* Enhanced Price Cards */}
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {/* Price 1: Postal Basic */}
+                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
+                            {/* Gradient accent line */}
+                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-red-400 to-orange-400"></div>
 
-                    <div className="grid lg:grid-cols-3 gap-8">
-                        {/* Group 1: Postal Services (Spans 2 Columns) */}
-                        <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center">
-                                    <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={100} height={100} className="w-8 h-auto object-contain" />
-                                </div>
-                                <div>
-                                    <h3 className="text-2xl font-bold text-slate-900">Postal Services</h3>
-                                    <p className="text-slate-500 text-sm">Clearance at Laksi Mail Center</p>
-                                </div>
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300 lg:group-hover:scale-110">
+                                <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={80} height={80} className="w-12 md:w-14 h-auto object-contain" />
                             </div>
 
-                            <div className="grid md:grid-cols-2 gap-8 md:gap-12 relative z-10">
-                                {/* Tier 1 */}
-                                <div className="space-y-4">
-                                    <div className="inline-block px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">Basic</div>
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-4xl font-bold text-slate-900">฿800</span>
-                                        <span className="text-slate-400 font-medium">/ shipment</span>
-                                    </div>
-                                    <p className="text-sm text-slate-500 leading-relaxed min-h-[3rem]">
-                                        For small packages with declared value under 40,000 THB.
-                                    </p>
-                                    <ul className="space-y-3 text-sm text-slate-600">
-                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" /> <span>Documents Handling</span></li>
-                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" /> <span>Duty Payment Service</span></li>
-                                    </ul>
-                                </div>
+                            <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">฿800</div>
 
-                                {/* Divider for mobile */}
-                                <div className="md:hidden h-px bg-slate-100 w-full"></div>
-
-                                {/* Tier 2 */}
-                                <div className="space-y-4 relative">
-                                    {/* Vertical Divider for Desktop */}
-                                    <div className="hidden md:block absolute -left-6 top-0 bottom-0 w-px bg-slate-100"></div>
-
-                                    <div className="inline-block px-3 py-1 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-wider mb-2">Standard</div>
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-4xl font-bold text-slate-900">฿1,500</span>
-                                        <span className="text-slate-400 font-medium">/ shipment</span>
-                                    </div>
-                                    <p className="text-sm text-slate-500 leading-relaxed min-h-[3rem]">
-                                        For value &gt; 40,000 THB <span className="text-blue-600 font-bold">OR</span> items requiring an import license (FDA/TISI).
-                                    </p>
-                                    <ul className="space-y-3 text-sm text-slate-600">
-                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-blue-500 shrink-0 mt-0.5" /> <span>Formal Customs Entry</span></li>
-                                        <li className="flex gap-3 items-start"><CheckCircle size={18} className="text-blue-500 shrink-0 mt-0.5" /> <span>License Submission</span></li>
-                                    </ul>
-                                </div>
+                            <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
+                                <p>Postal imports</p>
+                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
+                                <p>Value under ฿40,000</p>
+                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
+                                <p>No license required</p>
                             </div>
                         </div>
 
-                        {/* Group 2: Airport / Courier (Dark Theme) */}
-                        <div className="lg:col-span-1 bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-blue-900/20 text-white relative overflow-hidden group">
-                            {/* Gradient Blobs */}
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-colors duration-500"></div>
+                        {/* Price 2: Postal Standard */}
+                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
+                            {/* Gradient accent line */}
+                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-transform duration-300 lg:group-hover:scale-110">
+                                <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={80} height={80} className="w-12 md:w-14 h-auto object-contain" />
+                            </div>
+
+                            <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">฿1,500</div>
+
+                            <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
+                                <p>Postal imports</p>
+                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
+                                <p>Value over ฿40,000</p>
+                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
+                                <p>or license required</p>
+                            </div>
+                        </div>
+
+                        {/* Price 3: All Other */}
+                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
+                            {/* Gradient accent line */}
+                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
 
                             <div className="relative z-10">
-                                <div className="flex items-center gap-4 mb-8">
-                                    <div className="flex -space-x-3">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
-                                            <Image src="/images/logos/fedex.png" alt="FedEx" width={40} height={40} className="object-contain" />
-                                        </div>
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
-                                            <Image src="/images/logos/dhl.png" alt="DHL" width={40} height={40} className="object-contain" />
-                                        </div>
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-slate-900 p-1">
-                                            <Image src="/images/logos/ups.png" alt="UPS" width={40} height={40} className="object-contain" />
-                                        </div>
+                                <div className="flex -space-x-3 justify-center mb-6">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
+                                        <Image src="/images/logos/fedex.png" alt="FedEx" width={50} height={50} className="object-contain" />
+                                    </div>
+                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
+                                        <Image src="/images/logos/dhl.png" alt="DHL" width={50} height={50} className="object-contain" />
+                                    </div>
+                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
+                                        <Image src="/images/logos/ups.png" alt="UPS" width={50} height={50} className="object-contain" />
                                     </div>
                                 </div>
 
-                                <div className="inline-block px-3 py-1 rounded-lg bg-blue-600 text-white text-xs font-bold uppercase tracking-wider mb-6 shadow-lg shadow-blue-600/40">
-                                    Air Freight / Courier
-                                </div>
+                                <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">฿4,500</div>
 
-                                <h3 className="text-3xl font-bold text-white mb-2">฿4,500</h3>
-                                <p className="text-slate-400 text-sm mb-8">Starting price for full customs processing at Suvarnabhumi Airport.</p>
+                                <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
+                                    <p>Air freight & couriers</p>
+                                    <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
+                                    <p>All other cases</p>
 
-                                <div className="space-y-4">
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                                        <p className="text-sm font-bold text-blue-200 mb-1">Complex Clearance</p>
-                                        <p className="text-xs text-slate-400">For detained courier shipments (FedEx, DHL, UPS) or Air Cargo.</p>
-                                    </div>
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                                        <p className="text-sm font-bold text-blue-200 mb-1">Permit Handling</p>
-                                        <p className="text-xs text-slate-400">Includes coordination with FDA, TISI, or NBTC if required.</p>
+                                    <div className="pt-2">
+                                        <span className="inline-block px-4 py-1.5 bg-blue-50 rounded-full text-xs text-blue-600 font-semibold uppercase tracking-wider">
+                                            Starting price
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -591,24 +622,47 @@ const ClearpostLanding = () => {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { img: "/images/general.png", title: "General Cargo", desc: "Furniture, Clothes, Machine Parts" },
-                            { img: "/images/food.png", title: "Food & FDA", desc: "Supplements, Snacks, Drinks (FDA Required)" },
-                            { img: "/images/electronics.png", title: "Electronics / TISI", desc: "Appliances, Servers, Radio Equipment" },
-                            { img: "/images/personal.png", title: "Personal Effects", desc: "Relocating to Thailand? Move duty-free." }
+                            {
+                                icon: Pill,
+                                title: "Supplements / FDA",
+                                desc: "Vitamins, Protein Powders, Medical Foods. We handle the FDA registration.",
+                                gradient: "from-teal-400 to-emerald-500",
+                                shadow: "shadow-teal-500/30"
+                            },
+                            {
+                                icon: Sparkles,
+                                title: "Cosmetics / FDA",
+                                desc: "Skincare, Makeup, Perfumes. Full compliance with Thai FDA regulations.",
+                                gradient: "from-rose-400 to-pink-500",
+                                shadow: "shadow-pink-500/30"
+                            },
+                            {
+                                icon: Cpu,
+                                title: "Electronics / TISI",
+                                desc: "Appliances, Servers, Radio Equipment. TISI & NBTC permit handling.",
+                                gradient: "from-blue-400 to-indigo-500",
+                                shadow: "shadow-indigo-500/30"
+                            },
+                            {
+                                icon: Armchair,
+                                title: "Personal Effects",
+                                desc: "Relocating to Thailand? Move your household goods duty-free (if eligible).",
+                                gradient: "from-amber-400 to-orange-500",
+                                shadow: "shadow-orange-500/30"
+                            }
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white rounded-2xl border border-slate-100 shadow-lg hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full">
-                                <div className="h-48 relative overflow-hidden bg-slate-100">
-                                    <Image
-                                        src={item.img}
-                                        alt={item.title}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-60"></div>
+                            <div key={idx} className="bg-white rounded-[2rem] border border-slate-100 shadow-lg lg:hover:shadow-xl transition-all group overflow-hidden flex flex-col h-full relative">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50"></div>
+
+                                {/* Icon Header */}
+                                <div className="p-8 pb-0">
+                                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-lg ${item.shadow} lg:group-hover:scale-110 transition-transform duration-500`}>
+                                        <item.icon size={32} strokeWidth={1.5} />
+                                    </div>
                                 </div>
-                                <div className="p-6 flex-1 flex flex-col relative">
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{item.title}</h3>
+
+                                <div className="p-8 pt-6 flex-1 flex flex-col relative">
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2 lg:group-hover:text-blue-600 transition-colors">{item.title}</h3>
                                     <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                                 </div>
                             </div>
@@ -719,21 +773,21 @@ const ClearpostLanding = () => {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 relative items-stretch">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative items-stretch">
                         {[
                             { icon: FileText, step: "01", title: "Submit Documents", desc: "Upload your Invoice & Packing List draft via our secure portal for a free pre-audit check." },
                             { icon: ShieldCheck, step: "02", title: "Customs Clearance", desc: "We handle duty calculations, paperless submissions, and official customs formalities." },
                             { icon: Truck, step: "03", title: "Door Delivery", desc: "Once released, we truck your goods directly from the port or airport to your doorstep." }
                         ].map((step, idx) => (
                             <div key={idx} className="relative group">
-                                <div className="h-full bg-slate-50 rounded-[2rem] p-8 border border-slate-100 transition-all duration-300 hover:bg-white hover:shadow-xl hover:-translate-y-1 hover:border-blue-100">
+                                <div className="h-full bg-slate-50 rounded-[2rem] p-8 border border-slate-100 transition-all duration-300 lg:hover:bg-white lg:hover:shadow-xl lg:hover:-translate-y-1 lg:hover:border-blue-100">
                                     {/* Watermark Number */}
-                                    <div className="absolute top-6 right-8 text-6xl font-black text-slate-200/50 select-none group-hover:text-blue-50 transition-colors">
+                                    <div className="absolute top-6 right-8 text-6xl font-black text-slate-200/50 select-none lg:group-hover:text-blue-50 transition-colors">
                                         {step.step}
                                     </div>
 
                                     {/* Icon */}
-                                    <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-8 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                                    <div className="relative w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-sm mb-8 lg:group-hover:scale-110 lg:group-hover:bg-blue-600 lg:group-hover:text-white transition-all duration-300">
                                         <step.icon size={28} />
                                     </div>
 
@@ -774,7 +828,7 @@ const ClearpostLanding = () => {
                             { q: "How long does the process take?", a: "Green Line (Standard): 24 hours. Red Line (Inspections): 2-4 days. Permit Processing (FDA/TISI): 1-3 weeks depending on the product complexity." }
                         ].map((faq, idx) => (
                             <details key={idx} className="bg-white rounded-2xl border border-slate-200 shadow-sm group">
-                                <summary className="flex justify-between items-center p-6 cursor-pointer list-none font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                                <summary className="flex justify-between items-center p-6 cursor-pointer list-none font-bold text-slate-900 lg:hover:text-blue-600 transition-colors">
                                     <span>{faq.q}</span>
                                     <ChevronDown className="group-open:rotate-180 transition-transform text-slate-400" />
                                 </summary>
@@ -826,7 +880,33 @@ const ClearpostLanding = () => {
             <a href="#" className="md:hidden fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform shadow-green-900/20">
                 <MessageCircle size={28} />
             </a>
-        </div>
+            {/* Image Modal / Lightbox */}
+            {
+                selectedImage && (
+                    <div
+                        className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <button
+                            className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors z-50"
+                            onClick={() => setSelectedImage(null)}
+                        >
+                            <X size={32} />
+                        </button>
+                        <div className="relative w-full h-full max-w-5xl max-h-[90vh]">
+                            <Image
+                                src={selectedImage}
+                                alt="Full screen view"
+                                fill
+                                className="object-contain"
+                                sizes="100vw"
+                                priority
+                            />
+                        </div>
+                    </div>
+                )
+            }
+        </div >
     );
 };
 
