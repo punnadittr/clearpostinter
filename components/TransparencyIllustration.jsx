@@ -11,7 +11,7 @@ export default function TransparencyIllustration() {
             <div className="relative group transform transition-all duration-700 hover:rotate-y-6 hover:rotate-x-6 preserve-3d">
 
                 {/* The Receipt / Document Card */}
-                <div className="bg-white w-[380px] rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative z-20">
+                <div className="bg-slate-900 w-full md:max-w-[380px] rounded-3xl shadow-2xl overflow-hidden relative z-20">
                     {/* Header */}
                     <div className="bg-slate-900 p-6 flex items-center justify-between text-white">
                         <div className="flex items-center gap-3">
@@ -29,7 +29,7 @@ export default function TransparencyIllustration() {
                     </div>
 
                     {/* Body */}
-                    <div className="p-8 space-y-6">
+                    <div className="p-8 space-y-6 bg-white">
 
                         {/* Line Items */}
                         <div className="space-y-4">
@@ -63,9 +63,9 @@ export default function TransparencyIllustration() {
                         </div>
 
                         {/* Total */}
-                        <div className="pt-2 flex justify-between items-end">
-                            <p className="text-slate-500 text-sm">Total Paid to Customs</p>
-                            <p className="text-3xl font-bold text-slate-900">฿ 6,630.<span className="text-lg text-slate-400">00</span></p>
+                        <div className="pt-2 flex flex-row flex-wrap justify-between items-end gap-2">
+                            <p className="text-slate-500 text-xs md:text-sm mb-1">Total Paid to Customs</p>
+                            <p className="text-2xl md:text-3xl font-bold text-slate-900">฿ 6,630.<span className="text-base md:text-lg text-slate-400">00</span></p>
                         </div>
                     </div>
 

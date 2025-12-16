@@ -268,6 +268,7 @@ const ClearpostLanding = () => {
                                         src="/images/forms/customs-form-white.jpg"
                                         alt="Thai Customs White Form - Passenger Detention"
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 33vw"
                                         className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
                                     />
                                 </div>
@@ -294,6 +295,7 @@ const ClearpostLanding = () => {
                                             src="/images/forms/customs-form-green.jpg"
                                             alt="Thai Customs Green Form - Front"
                                             fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
                                             className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
@@ -302,6 +304,7 @@ const ClearpostLanding = () => {
                                             src="/images/forms/customs-form-green-back.jpg"
                                             alt="Thai Customs Green Form - Back Instructions"
                                             fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
                                             className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
@@ -328,6 +331,7 @@ const ClearpostLanding = () => {
                                         src="/images/forms/customs-form-postal.jpg"
                                         alt="Thai Customs Postal Notification Form"
                                         fill
+                                        sizes="(max-width: 768px) 100vw, 33vw"
                                         className="object-cover opacity-90 md:group-hover:opacity-100 transition-opacity"
                                     />
                                 </div>
@@ -364,6 +368,7 @@ const ClearpostLanding = () => {
                         src="/images/customs-chaos.png"
                         alt="Background Texture"
                         fill
+                        sizes="100vw"
                         className="object-cover grayscale"
                     />
                 </div>
@@ -597,6 +602,7 @@ const ClearpostLanding = () => {
                                         src={item.img}
                                         alt={item.title}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                         className="object-cover group-hover:scale-110 transition-transform duration-700"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-60"></div>

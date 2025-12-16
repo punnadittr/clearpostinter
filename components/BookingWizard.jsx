@@ -54,6 +54,12 @@ const EXAMPLE_DOCUMENTS = [
     { src: '/assets/examples/receipt.jpg', label: 'Purchase Receipt', desc: 'Proof of Payment', allowedCarriers: ['thaipost'] }
 ];
 
+const POPULAR_ITEMS = [
+    "Vitamins/Supplements", "Cosmetics", "Clothing",
+    "Electronics", "Auto Parts", "Toys/Figures",
+    "Bag", "Shoes", "Documents"
+];
+
 const formSchema = yup.object().shape({
     fullName: yup.string().required('Full name is required'),
     whatsappNumber: yup.string().required('WhatsApp number is required'),
@@ -418,6 +424,31 @@ export default function BookingWizard({ onClose }) {
 
                                     <div>
                                         <label className="block text-sm font-semibold text-slate-700 mb-1">What is inside the package? *</label>
+
+                                        {/* Quick Add Tags */}
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {POPULAR_ITEMS.map(item => (
+                                                <button
+                                                    key={item}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setFormData(prev => ({
+                                                            ...prev,
+                                                            itemDescription: prev.itemDescription
+                                                                ? prev.itemDescription + ', ' + item
+                                                                : item
+                                                        }));
+                                                        // Clear error if exists
+                                                        if (errors.itemDescription) {
+                                                            setErrors(prev => ({ ...prev, itemDescription: null }));
+                                                        }
+                                                    }}
+                                                    className="text-xs bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 border border-slate-200 rounded-full px-3 py-1 transition-all flex items-center gap-1"
+                                                >
+                                                    <span>+</span> {item}
+                                                </button>
+                                            ))}
+                                        </div>
                                         <textarea
                                             name="itemDescription"
                                             placeholder="e.g., 5kg of Supplements, 2 used iPhones..."

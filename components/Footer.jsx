@@ -76,6 +76,7 @@ export default function Footer() {
                   src="/images/trust/pp20.jpg"
                   alt="VAT Registration Certificate (Por Por 20)"
                   fill
+                  sizes="(max-width: 768px) 100vw, 300px"
                   className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
