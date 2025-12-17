@@ -93,7 +93,7 @@ export const metadata = {
   openGraph: {
     title: "Resources & Blog | Clearpost Co., Ltd.",
     description: "Expert insights on Thai Customs clearance, shipping regulations, and logistics best practices.",
-    url: 'https://clearpost-th.com/resources',
+    url: '/resources',
     siteName: 'Clearpost Co., Ltd.',
     images: [
       {
@@ -113,7 +113,7 @@ export const metadata = {
     images: ['/opengraph-image.png'],
   },
   alternates: {
-    canonical: 'https://clearpost-th.com/resources',
+    canonical: '/resources',
   },
 };
 

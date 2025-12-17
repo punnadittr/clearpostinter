@@ -98,7 +98,7 @@ export default function PrivacyPolicy() {
                         </p>
                         <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
                             <p className="font-bold text-slate-900">Clearpost Co., Ltd.</p>
-                            <p>Email: contact@clearpost-th.com</p>
+                            <p>Email: contact@clearpost.co.th</p>
                             <p>Address: 1222/310 Liab Klong Rangsit Road, Prachathipat, Thanyaburi, Pathum Thani 12130 Thailand</p>
                         </div>
                     </section>

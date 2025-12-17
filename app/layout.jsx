@@ -7,15 +7,17 @@ const jakarta = Plus_Jakarta_Sans({
     variable: '--font-jakarta',
 })
 
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th';
+
 export const metadata = {
-    metadataBase: new URL('https://clearpost-th.com'),
+    metadataBase: new URL(baseUrl),
     title: 'Clearpost | Thailand Customs Broker & Import Specialist',
     description: 'Avoid fines and seized goods. Clearpost provides audit-first logistics for restricted imports: Food (FDA), Medical, Buddha Images, and TISI parts.',
     keywords: ['Thailand Customs Broker', 'Shipping to Bangkok', 'Import License Thailand', 'Clearance Agent Suvarnabhumi', 'FDA Registration Thailand', 'TISI Certification', 'Shipping Buddha Image'],
     openGraph: {
         title: 'Clearpost | Thailand Customs Broker & Import Specialist',
         description: 'Avoid fines and seized goods. Clearpost provides audit-first logistics for restricted imports.',
-        url: 'https://clearpost-th.com',
+        url: baseUrl,
         siteName: 'Clearpost Co., Ltd.',
         images: [
             {
@@ -35,13 +37,15 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th';
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'CustomsBroker',
         'name': 'Clearpost Co., Ltd.',
-        'image': 'https://clearpost-th.com/opengraph-image.png',
-        '@id': 'https://clearpost-th.com',
-        'url': 'https://clearpost-th.com',
+        'image': `${baseUrl}/opengraph-image.png`,
+        '@id': baseUrl,
+        'url': baseUrl,
         'telephone': '+66800000000',
         'address': {
             '@type': 'PostalAddress',

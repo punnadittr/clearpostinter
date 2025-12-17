@@ -19,7 +19,7 @@ async function getBlogPosts() {
         });
 
         return res.items.map((item) => ({
-            url: `https://clearpost-th.com/resources/${item.sys.id}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th'}/resources/${item.sys.id}`,
             lastModified: new Date(item.sys.updatedAt),
             changeFrequency: 'weekly',
             priority: 0.7,
@@ -31,7 +31,7 @@ async function getBlogPosts() {
 }
 
 export default async function sitemap() {
-    const baseUrl = 'https://clearpost-th.com'
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th';
     const blogPosts = await getBlogPosts();
 
     return [

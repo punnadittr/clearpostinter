@@ -64,7 +64,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: post.title,
       description: post.content.substring(0, 160).replace(/<[^>]*>?/gm, "") + "...",
-      url: `https://clearpost-th.com/resources/${post.id}`,
+      url: `/resources/${post.id}`,
       type: 'article',
       publishedTime: post.date, // Format might need adjustment depending on input
       authors: ['Clearpost Co., Ltd.'],
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }) {
       images: [post.imageUrl],
     },
     alternates: {
-      canonical: `https://clearpost-th.com/resources/${post.id}`,
+      canonical: `/resources/${post.id}`,
     },
   };
 }

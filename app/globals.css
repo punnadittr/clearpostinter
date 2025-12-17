@@ -43,10 +43,16 @@ body {
   margin: 0.5rem 0;
 }
 
-.prose-reset ul,
+.prose-reset ul {
+  list-style-type: disc;
+  margin: 0.5rem 0 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
 .prose-reset ol {
-  margin: 0.5rem 0 0.5rem 1.25rem;
-  padding: 0;
+  list-style-type: decimal;
+  margin: 0.5rem 0 0.5rem 0;
+  padding-left: 1.5rem;
 }
 
 .prose-reset li {
