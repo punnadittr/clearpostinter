@@ -21,7 +21,7 @@ export const metadata = {
         siteName: 'Clearpost Co., Ltd.',
         images: [
             {
-                url: '/opengraph-image.png',
+                url: `${baseUrl}/opengraph-image.png`,
                 width: 1200,
                 height: 630,
                 alt: 'Clearpost Co., Ltd. - Official Customs Broker',
