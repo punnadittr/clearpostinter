@@ -16,7 +16,7 @@ export const metadata = {
     keywords: ['Thailand Customs Broker', 'Shipping to Bangkok', 'Import License Thailand', 'Clearance Agent Suvarnabhumi', 'FDA Registration Thailand', 'TISI Certification', 'Shipping Buddha Image'],
     openGraph: {
         title: 'Clearpost | Thailand Customs Broker & Import Specialist',
-        description: 'Avoid fines and seized goods. Clearpost provides audit-first logistics for restricted imports.',
+        description: 'Avoid fines and seized goods with Clearpost. We provide expert, audit-first logistics for restricted imports in Thailand. Get your goods cleared fast and legally.',
         url: baseUrl,
         siteName: 'Clearpost Co., Ltd.',
         images: [
