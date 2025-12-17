@@ -43,8 +43,10 @@ import {
 
 } from 'lucide-react';
 import BookingWizard from '../components/BookingWizard';
+import AntidoteReceipt from '../components/AntidoteReceipt';
 import TransparencyIllustration from '../components/TransparencyIllustration';
 import Footer from '../components/Footer';
+import PricingCalculator from '../components/PricingCalculator';
 
 const ClearpostLanding = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,8 +87,8 @@ const ClearpostLanding = () => {
                         {/* Desktop Menu - Modified for Dark BG */}
                         <div className="hidden lg:flex space-x-1 items-center bg-white/5 p-1.5 rounded-full border border-white/10">
                             <button onClick={() => scrollToSection('problems')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">Problems</button>
-                            <button onClick={() => scrollToSection('rescue')} className="px-5 py-2 rounded-full text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all font-medium text-sm flex items-center gap-2"><LifeBuoy size={16} /> Rescue Service</button>
-                            <button onClick={() => scrollToSection('services')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">All Services</button>
+                            <button onClick={() => scrollToSection('services')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">Services</button>
+                            <button onClick={() => scrollToSection('pricing')} className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">Pricing</button>
                             {/* NEW: Resources Link */}
                             <Link href="/resources" className="px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all font-medium text-sm">
                                 Blog & Resources
@@ -115,9 +117,9 @@ const ClearpostLanding = () => {
                 {isMenuOpen && (
                     <div className="lg:hidden bg-slate-900 border-t border-slate-800 absolute w-full shadow-2xl animate-in slide-in-from-top-5">
                         <div className="px-4 pt-4 pb-8 space-y-2">
-                            <button onClick={() => scrollToSection('problems')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Why Us</button>
-                            <button onClick={() => scrollToSection('rescue')} className="block w-full text-left px-4 py-4 text-red-400 bg-red-900/20 hover:bg-red-900/30 font-bold rounded-xl flex items-center gap-2"><LifeBuoy size={20} /> Rescue Service</button>
+                            <button onClick={() => scrollToSection('problems')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Problems</button>
                             <button onClick={() => scrollToSection('services')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Services</button>
+                            <button onClick={() => scrollToSection('pricing')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Pricing</button>
                             {/* NEW: Mobile Resources Link */}
                             <Link href="/resources" className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">
                                 Blog & Resources
@@ -266,9 +268,9 @@ const ClearpostLanding = () => {
                         <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
                             <div
                                 onClick={() => setSelectedImage("/images/forms/customs-form-white.jpg")}
-                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                                className="rounded-2xl shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu [backface-visibility:hidden] [transform:translateZ(0)] cursor-pointer relative"
                             >
-                                <div className="aspect-[3/4] relative">
+                                <div className="aspect-[3/4] relative rounded-2xl overflow-hidden [mask-image:radial-gradient(white,black)]">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Retained Receipt
                                     </div>
@@ -297,9 +299,9 @@ const ClearpostLanding = () => {
                         <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
                             <div
                                 onClick={() => setSelectedImage("/images/forms/customs-form-green.jpg")}
-                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                                className="rounded-2xl shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu [backface-visibility:hidden] [transform:translateZ(0)] cursor-pointer relative"
                             >
-                                <div className="aspect-[3/4] relative flex flex-col">
+                                <div className="aspect-[3/4] relative flex flex-col rounded-2xl overflow-hidden [mask-image:radial-gradient(white,black)]">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Assessment Receipt
                                     </div>
@@ -339,9 +341,9 @@ const ClearpostLanding = () => {
                         <div className="space-y-6 group min-w-[75vw] md:min-w-[45vw] lg:min-w-0 snap-center">
                             <div
                                 onClick={() => setSelectedImage("/images/forms/customs-form-postal.jpg")}
-                                className="rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu cursor-pointer relative"
+                                className="rounded-2xl shadow-2xl shadow-black/50 border border-slate-700 bg-slate-800 transition-transform duration-300 lg:group-hover:-translate-y-2 transform-gpu [backface-visibility:hidden] [transform:translateZ(0)] cursor-pointer relative"
                             >
-                                <div className="aspect-[3/4] relative">
+                                <div className="aspect-[3/4] relative rounded-2xl overflow-hidden [mask-image:radial-gradient(white,black)]">
                                     <div className="absolute top-4 right-4 bg-slate-900 border border-slate-600 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-lg">
                                         Postal Notification
                                     </div>
@@ -500,24 +502,21 @@ const ClearpostLanding = () => {
                         <div className="order-1 lg:order-2 relative">
                             <div className="absolute inset-0 bg-blue-600 rounded-[3rem] rotate-3 opacity-5"></div>
                             <div className="relative group">
-                                <TransparencyIllustration />
-
-
+                                <AntidoteReceipt />
                             </div>
                         </div>
                     </div>
                 </div>
             </section >
 
+
+
+
             {/* NEW: Pricing Section */}
             <section id="pricing" className="py-24 px-4 bg-slate-50 border-b border-slate-200 relative overflow-hidden">
-                {/* Abstract Background Shapes - Clustered around cards */}
-                <div className="absolute top-1/3 right-10 w-72 h-72 rounded-full bg-blue-400/20 blur-3xl animate-pulse mix-blend-multiply"></div>
-                <div className="absolute bottom-1/3 left-10 w-72 h-72 rounded-full bg-purple-400/20 blur-3xl animate-pulse delay-700 mix-blend-multiply"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-indigo-200/40 rounded-full pointer-events-none animate-[spin_60s_linear_infinite] opacity-50"></div>
-                <div className="absolute top-1/3 left-20 w-16 h-16 border-4 border-orange-300/40 rounded-2xl rotate-12 animate-[bounce_4s_infinite]"></div>
-                <div className="absolute bottom-1/3 right-20 w-24 h-24 bg-emerald-300/20 rounded-full mix-blend-multiply animate-pulse delay-1000"></div>
-                <div className="max-w-5xl mx-auto">
+
+
+                <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
                             Usage Fees
@@ -527,82 +526,7 @@ const ClearpostLanding = () => {
                         </p>
                     </div>
 
-                    {/* Enhanced Price Cards */}
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {/* Price 1: Postal Basic */}
-                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
-                            {/* Gradient accent line */}
-                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-red-400 to-orange-400"></div>
-
-                            <div className="w-16 h-16 md:w-20 md:h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300 lg:group-hover:scale-110">
-                                <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={80} height={80} className="w-12 md:w-14 h-auto object-contain" />
-                            </div>
-
-                            <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">฿800</div>
-
-                            <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
-                                <p>Postal imports</p>
-                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
-                                <p>Value under ฿40,000</p>
-                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
-                                <p>No license required</p>
-                            </div>
-                        </div>
-
-                        {/* Price 2: Postal Standard */}
-                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
-                            {/* Gradient accent line */}
-                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
-
-                            <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-transform duration-300 lg:group-hover:scale-110">
-                                <Image src="/images/logos/thailandpost.png" alt="Thai Post" width={80} height={80} className="w-12 md:w-14 h-auto object-contain" />
-                            </div>
-
-                            <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">฿1,500</div>
-
-                            <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
-                                <p>Postal imports</p>
-                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
-                                <p>Value over ฿40,000</p>
-                                <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
-                                <p>or license required</p>
-                            </div>
-                        </div>
-
-                        {/* Price 3: All Other */}
-                        <div className="group bg-white rounded-2xl p-6 md:p-8 border border-slate-200 shadow-lg text-center relative overflow-hidden transition-all duration-300 lg:hover:shadow-xl lg:hover:-translate-y-1">
-                            {/* Gradient accent line */}
-                            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-
-                            <div className="relative z-10">
-                                <div className="flex -space-x-3 justify-center mb-6">
-                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
-                                        <Image src="/images/logos/fedex.png" alt="FedEx" width={50} height={50} className="object-contain" />
-                                    </div>
-                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
-                                        <Image src="/images/logos/dhl.png" alt="DHL" width={50} height={50} className="object-contain" />
-                                    </div>
-                                    <div className="w-14 h-14 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center border-2 border-slate-200 p-2 transition-transform duration-300 lg:group-hover:scale-110">
-                                        <Image src="/images/logos/ups.png" alt="UPS" width={50} height={50} className="object-contain" />
-                                    </div>
-                                </div>
-
-                                <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">฿4,500</div>
-
-                                <div className="space-y-4 text-sm text-slate-600 font-medium tracking-wide">
-                                    <p>Air freight & couriers</p>
-                                    <div className="h-px bg-slate-100 w-1/2 mx-auto"></div>
-                                    <p>All other cases</p>
-
-                                    <div className="pt-2">
-                                        <span className="inline-block px-4 py-1.5 bg-blue-50 rounded-full text-xs text-blue-600 font-semibold uppercase tracking-wider">
-                                            Starting price
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <PricingCalculator onStartBooking={startBooking} />
                 </div>
             </section>
 
