@@ -96,7 +96,7 @@ const PricingCalculator = ({ onStartBooking }) => {
             <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 {/* Left Side: Selection */}
                 <div className="lg:w-1/2 space-y-4">
-                    <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                    <h3 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
                         <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 text-sm">1</span>
                         Select your shipment type
                     </h3>
@@ -107,7 +107,7 @@ const PricingCalculator = ({ onStartBooking }) => {
                                 key={service.id}
                                 type="button"
                                 onClick={() => setSelectedId(service.id)}
-                                className={`relative text-left p-4 md:p-6 rounded-2xl border-2 group outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${selectedId === service.id
+                                className={`relative text-left p-4 md:p-6 rounded-2xl border-2 group outline-none ${selectedId === service.id
                                     ? `${service.colors.border} ${service.colors.bgSoft} shadow-xl z-10`
                                     : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                                     }`}
@@ -120,7 +120,7 @@ const PricingCalculator = ({ onStartBooking }) => {
                                         <service.icon size={20} className="md:w-6 md:h-6" />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h4 className={`font-bold text-base md:text-lg truncate ${selectedId === service.id ? service.colors.textDark : 'text-slate-700'
+                                        <h4 className={`font-semibold text-base md:text-lg truncate ${selectedId === service.id ? service.colors.textDark : 'text-slate-700'
                                             }`}>
                                             {service.title}
                                         </h4>

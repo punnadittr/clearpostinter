@@ -1,10 +1,10 @@
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Footer from '../components/Footer';
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
     subsets: ['latin'],
-    variable: '--font-inter',
+    variable: '--font-jakarta',
 })
 
 export const metadata = {
@@ -66,13 +66,13 @@ export default function RootLayout({ children }) {
 
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={jakarta.className}>
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                 />
                 {children}
-                <Footer/>
+                <Footer />
             </body>
         </html>
     )

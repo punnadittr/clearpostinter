@@ -117,18 +117,18 @@ const ClearpostLanding = () => {
                 {isMenuOpen && (
                     <div className="lg:hidden bg-slate-900 border-t border-slate-800 absolute w-full shadow-2xl animate-in slide-in-from-top-5">
                         <div className="px-4 pt-4 pb-8 space-y-2">
-                            <button onClick={() => scrollToSection('problems')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Problems</button>
-                            <button onClick={() => scrollToSection('services')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Services</button>
-                            <button onClick={() => scrollToSection('pricing')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">Pricing</button>
+                            <button onClick={() => scrollToSection('problems')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-semibold rounded-xl">Problems</button>
+                            <button onClick={() => scrollToSection('services')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-semibold rounded-xl">Services</button>
+                            <button onClick={() => scrollToSection('pricing')} className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-semibold rounded-xl">Pricing</button>
                             {/* NEW: Mobile Resources Link */}
-                            <Link href="/resources" className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-bold rounded-xl">
+                            <Link href="/resources" className="block w-full text-left px-4 py-4 text-slate-300 hover:bg-white/5 hover:text-white font-semibold rounded-xl">
                                 Blog & Resources
                             </Link>
                             <button
                                 onClick={() => {
                                     startBooking();
                                 }}
-                                className="block w-full text-center mt-6 bg-blue-600 text-white px-4 py-4 rounded-xl font-bold shadow-lg shadow-blue-600/20"
+                                className="block w-full text-center mt-6 bg-blue-600 text-white px-4 py-4 rounded-xl font-semibold shadow-lg shadow-blue-600/20"
                             >
                                 Start Consultation
                             </button>
@@ -172,14 +172,14 @@ const ClearpostLanding = () => {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <button
                                 onClick={startBooking}
-                                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-1 flex items-center justify-center gap-2 group"
+                                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-1 flex items-center justify-center gap-2 group"
                             >
                                 Free Document Check <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </button>
 
                             <button
                                 onClick={() => scrollToSection('services')}
-                                className="px-8 py-4 rounded-2xl font-bold text-lg bg-white/10 hover:bg-white/20 text-blue-100 transition-all backdrop-blur-md border border-white/10 flex items-center justify-center gap-2 hover:border-white/30 hover:text-white group"
+                                className="px-8 py-4 rounded-2xl font-semibold text-lg bg-white/10 hover:bg-white/20 text-blue-100 transition-all backdrop-blur-md border border-white/10 flex items-center justify-center gap-2 hover:border-white/30 hover:text-white group"
                             >
                                 <span className="relative z-10">Explore Services</span>
                             </button>
@@ -454,7 +454,7 @@ const ClearpostLanding = () => {
                                         }`}>
                                         <item.icon size={32} strokeWidth={1.5} />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
+                                    <h3 className="text-2xl font-semibold text-slate-900 mb-4">{item.title}</h3>
                                     <p className="text-slate-600 leading-relaxed">
                                         {item.desc}
                                     </p>
@@ -490,7 +490,7 @@ const ClearpostLanding = () => {
                                             <CheckCircle className="text-white" size={20} />
                                         </div>
                                         <div>
-                                            <h4 className="text-xl font-bold text-white mb-2">{service.title}</h4>
+                                            <h4 className="text-xl font-semibold text-white mb-2">{service.title}</h4>
                                             <p className="text-slate-400">{service.desc}</p>
                                         </div>
                                     </div>
@@ -586,7 +586,7 @@ const ClearpostLanding = () => {
                                 </div>
 
                                 <div className="p-8 pt-6 flex-1 flex flex-col relative">
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 lg:group-hover:text-blue-600 transition-colors">{item.title}</h3>
+                                    <h3 className="text-xl font-semibold text-slate-900 mb-2 lg:group-hover:text-blue-600 transition-colors">{item.title}</h3>
                                     <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                                 </div>
                             </div>
@@ -716,7 +716,7 @@ const ClearpostLanding = () => {
                                     </div>
 
                                     {/* Content */}
-                                    <h3 className="text-xl font-bold text-slate-900 mb-3 relative z-10">{step.title}</h3>
+                                    <h3 className="text-xl font-semibold text-slate-900 mb-3 relative z-10">{step.title}</h3>
                                     <p className="text-slate-500 leading-relaxed text-sm relative z-10">
                                         {step.desc}
                                     </p>
@@ -780,13 +780,13 @@ const ClearpostLanding = () => {
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button
                             onClick={startBooking}
-                            className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-blue-600/20 hover:-translate-y-1 transition-transform"
+                            className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-semibold text-lg shadow-xl shadow-blue-600/20 hover:-translate-y-1 transition-transform"
                         >
                             Start Free Consultation
                         </button>
                         <button
                             onClick={startBooking}
-                            className="bg-transparent border-2 border-slate-700 text-white hover:bg-slate-800 px-10 py-5 rounded-2xl font-bold text-lg transition-all"
+                            className="bg-transparent border-2 border-slate-700 text-white hover:bg-slate-800 px-10 py-5 rounded-2xl font-semibold text-lg transition-all"
                         >
                             I Have a Stuck Shipment
                         </button>
