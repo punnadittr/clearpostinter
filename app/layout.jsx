@@ -16,12 +16,13 @@ export const metadata = {
         title: 'Clearpost | Thailand Customs Broker & Import Specialist',
         description: 'Avoid fines and seized goods. Clearpost provides audit-first logistics for restricted imports.',
         url: 'https://clearpost-th.com',
-        siteName: 'Clearpost Logistics',
+        siteName: 'Clearpost Co., Ltd.',
         images: [
             {
-                url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+                url: '/opengraph-image.png',
                 width: 1200,
                 height: 630,
+                alt: 'Clearpost Co., Ltd. - Official Customs Broker',
             },
         ],
         locale: 'en_US',
@@ -37,16 +38,16 @@ export default function RootLayout({ children }) {
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'CustomsBroker',
-        'name': 'Clearpost Logistics',
-        'image': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa',
+        'name': 'Clearpost Co., Ltd.',
+        'image': 'https://clearpost-th.com/opengraph-image.png',
         '@id': 'https://clearpost-th.com',
         'url': 'https://clearpost-th.com',
         'telephone': '+66800000000',
         'address': {
             '@type': 'PostalAddress',
-            'streetAddress': '123 Logistics Park, Klong Luang',
-            'addressLocality': 'Pathum Thani',
-            'postalCode': '12120',
+            'streetAddress': '1222/310 Liab Klong Rangsit Road, Prachathipat',
+            'addressLocality': 'Thanyaburi, Pathum Thani',
+            'postalCode': '12130',
             'addressCountry': 'TH'
         },
         'priceRange': '$$',

@@ -97,9 +97,9 @@ export default function PrivacyPolicy() {
                             If you have any questions about this Privacy Policy, please contact us:
                         </p>
                         <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                            <p className="font-bold text-slate-900">Clearpost Logistics</p>
+                            <p className="font-bold text-slate-900">Clearpost Co., Ltd.</p>
                             <p>Email: contact@clearpost-th.com</p>
-                            <p>Address: 123 Logistics Park, Klong Luang, Pathum Thani 12120</p>
+                            <p>Address: 1222/310 Liab Klong Rangsit Road, Prachathipat, Thanyaburi, Pathum Thani 12130 Thailand</p>
                         </div>
                     </section>
 

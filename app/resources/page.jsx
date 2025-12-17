@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { createClient } from 'contentful';
 
 /**
@@ -21,20 +22,20 @@ async function getPostsFromCMS() {
   try {
     // 1. Fetch Entries using the CORRECT Content Type ID: 'blog'
     const res = await client.getEntries({
-      content_type: 'blog', 
+      content_type: 'blog',
       order: '-sys.createdAt'
     });
 
     // 2. Map Data
     return res.items.map((item) => {
       const { title, content } = item.fields;
-      
+
       // Extract excerpt from Rich Text
       let excerpt = "Click to read more...";
       if (content?.content) {
         const firstParagraph = content.content.find(node => node.nodeType === 'paragraph');
         if (firstParagraph?.content?.[0]?.value) {
-            excerpt = firstParagraph.content[0].value.substring(0, 100) + "...";
+          excerpt = firstParagraph.content[0].value.substring(0, 100) + "...";
         }
       }
 
@@ -42,11 +43,11 @@ async function getPostsFromCMS() {
         id: item.sys.id,
         title: title || 'Untitled Post',
         excerpt: excerpt,
-        category: 'Blog', 
+        category: 'Blog',
         date: new Date(item.sys.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
         readTime: '3 min read',
         slug: item.sys.id, // Using sys.id as the slug
-         imageUrl: item.fields.image
+        imageUrl: item.fields.image
           ? "https:" + item.fields.image.fields.file.url
           : "https://placehold.co/800x600/e2e8f0/64748b?text=Clearpost+Blog",
       };
@@ -87,39 +88,64 @@ function getMockData() {
 }
 
 export const metadata = {
-  title: "Resources & Blog | Clearpost",
-  description: "Collection of articles, tips, and news about international shipping.",
+  title: "Resources & Blog | Clearpost Co., Ltd.",
+  description: "Collection of articles, tips, and news about international shipping, customs clearance, and logistics in Thailand.",
+  openGraph: {
+    title: "Resources & Blog | Clearpost Co., Ltd.",
+    description: "Expert insights on Thai Customs clearance, shipping regulations, and logistics best practices.",
+    url: 'https://clearpost-th.com/resources',
+    siteName: 'Clearpost Co., Ltd.',
+    images: [
+      {
+        url: '/opengraph-image.png', // Ensure you have a default OG image or use a specific one
+        width: 1200,
+        height: 630,
+        alt: 'Clearpost Resources',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Resources & Blog | Clearpost Co., Ltd.",
+    description: "Expert insights on Thai Customs clearance, shipping regulations, and logistics best practices.",
+    images: ['/opengraph-image.png'],
+  },
+  alternates: {
+    canonical: 'https://clearpost-th.com/resources',
+  },
 };
 
 export default async function ResourcesPage() {
   const posts = await getPostsFromCMS();
-  
+
   if (!posts || posts.length === 0) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <p className="text-gray-500">No articles found.</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500">No articles found.</p>
+      </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-slate-600">
-      
+
       {/* --- Updated Navbar to Match Landing Page --- */}
       <nav className="bg-white border-b border-gray-100 py-4 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            {/* Branding */}
-            <Link href="/" className="flex items-center gap-2 group">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all">
-                    <img src="/logo-icon.png" alt="CP" className="w-6 h-6 object-contain" />
-                </div>
-                <span className="font-bold text-2xl text-slate-900 tracking-tight">Clearpost<span className="text-blue-500">.</span></span>
-            </Link>
+          {/* Branding */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all">
+              <img src="/logo-icon.png" alt="CP" className="w-6 h-6 object-contain" />
+            </div>
+            <span className="font-bold text-2xl text-slate-900 tracking-tight">Clearpost<span className="text-blue-500">.</span></span>
+          </Link>
 
-            {/* Back Link */}
-            <Link href="/" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1">
-                &larr; Back to Home
-            </Link>
+          {/* Back Link */}
+          <Link href="/" className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors flex items-center gap-1">
+            &larr; Back to Home
+          </Link>
         </div>
       </nav>
 
@@ -137,7 +163,13 @@ export default async function ResourcesPage() {
           {posts.map((post) => (
             <article key={post.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group">
               <div className="relative h-48 bg-gray-200 overflow-hidden">
-                <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                <Image
+                  src={post.imageUrl}
+                  alt={post.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </div>
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex items-center justify-between mb-3">
@@ -155,9 +187,9 @@ export default async function ResourcesPage() {
                   {post.excerpt}
                 </p>
                 <div className="pt-4 border-t border-slate-50 mt-auto">
-                    <Link href={`/resources/${post.slug}`} className="text-blue-600 font-bold text-sm hover:underline flex items-center gap-1">
-                        Read Article &rarr;
-                    </Link>
+                  <Link href={`/resources/${post.slug}`} className="text-blue-600 font-bold text-sm hover:underline flex items-center gap-1">
+                    Read Article &rarr;
+                  </Link>
                 </div>
               </div>
             </article>

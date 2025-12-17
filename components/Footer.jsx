@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-slate-950 text-slate-400 py-16 border-t border-slate-900 font-sans">
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Brand */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-white font-bold text-xl">
@@ -29,16 +29,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-bold mb-6">Services</h4>
-            <ul className="space-y-4 text-sm">
-              <li className="hover:text-blue-500 cursor-pointer">Postal Clearance</li>
-              <li className="hover:text-blue-500 cursor-pointer">Airport Release</li>
-              <li className="hover:text-blue-500 cursor-pointer">Permit Application</li>
-              <li className="hover:text-blue-500 cursor-pointer">Consultation</li>
-            </ul>
-          </div>
+
 
           {/* Contact */}
           <div>
@@ -55,7 +46,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-3 mt-4 text-slate-500">
                 <MapPin size={18} className="shrink-0 mt-0.5" />
-                <span>123 Logistics Park,<br />Pathum Thani, Thailand 12120</span>
+                <span>1222/310 Liab Klong Rangsit Road,<br />Prachathipat, Thanyaburi, Pathum Thani 12130</span>
               </li>
             </ul>
           </div>
@@ -76,6 +67,7 @@ export default function Footer() {
                   src="/images/trust/pp20.jpg"
                   alt="VAT Registration Certificate (Por Por 20)"
                   fill
+                  priority={true}
                   sizes="(max-width: 768px) 100vw, 300px"
                   className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                 />
