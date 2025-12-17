@@ -105,16 +105,17 @@ const PricingCalculator = ({ onStartBooking }) => {
                         {services.map((service) => (
                             <button
                                 key={service.id}
+                                type="button"
                                 onClick={() => setSelectedId(service.id)}
-                                className={`relative text-left p-4 md:p-6 rounded-2xl border-2 transition-all duration-300 group ${selectedId === service.id
-                                        ? `${service.colors.border} ${service.colors.bgSoft} ring-4 ${service.colors.ring} shadow-xl`
-                                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                                className={`relative text-left p-4 md:p-6 rounded-2xl border-2 group outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${selectedId === service.id
+                                    ? `${service.colors.border} ${service.colors.bgSoft} shadow-xl z-10`
+                                    : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                                     }`}
                             >
                                 <div className="flex items-center gap-3 md:gap-4">
-                                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-colors flex-shrink-0 ${selectedId === service.id
-                                            ? `${service.colors.iconBg} text-white`
-                                            : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
+                                    <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${selectedId === service.id
+                                        ? `${service.colors.iconBg} text-white`
+                                        : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
                                         }`}>
                                         <service.icon size={20} className="md:w-6 md:h-6" />
                                     </div>
@@ -128,8 +129,8 @@ const PricingCalculator = ({ onStartBooking }) => {
                                         </p>
                                     </div>
                                     <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selectedId === service.id
-                                            ? `${service.colors.border} ${service.colors.iconBg}`
-                                            : 'border-slate-300'
+                                        ? `${service.colors.border} ${service.colors.iconBg}`
+                                        : 'border-slate-300'
                                         }`}>
                                         {selectedId === service.id && <div className="w-2 h-2 md:w-2.5 md:h-2.5 bg-white rounded-full" />}
                                     </div>
