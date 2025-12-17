@@ -7,7 +7,7 @@ const jakarta = Plus_Jakarta_Sans({
     variable: '--font-jakarta',
 })
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpostinter.netlify.app';
 
 export const metadata = {
     metadataBase: new URL(baseUrl),
@@ -37,7 +37,7 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpost.co.th';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpostinter.netlify.app';
 
     const jsonLd = {
         '@context': 'https://schema.org',
