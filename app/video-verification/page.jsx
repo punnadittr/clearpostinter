@@ -15,8 +15,13 @@ export default function VideoVerificationPage() {
     const searchParams = useSearchParams();
     const dynamicRoomUrl = searchParams.get('room');
 
+    // Redirect if no room is provided (optional, but good UX to show error instead)
+    if (!dynamicRoomUrl && step !== "intro") {
+        // We handle this in UI below
+    }
+
     // Automatically set a default or use the dynamic one
-    const targetRoomUrl = dynamicRoomUrl || "https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9";
+    const targetRoomUrl = dynamicRoomUrl;
 
     const generateRoom = () => {
         // Just move to call step using the determined URL
@@ -40,7 +45,22 @@ export default function VideoVerificationPage() {
                     </p>
                 </div>
 
-                {step === "intro" && (
+                {!targetRoomUrl && step === "intro" && (
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 max-w-2xl mx-auto">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <ShieldCheck className="h-5 w-5 text-red-500" />
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-red-700">
+                                    Invalid Verification Link. Please request a new link from your coordinator.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {step === "intro" && targetRoomUrl && (
                     <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border border-gray-100">
                         <div className="flex justify-center mb-8">
                             <div className="bg-red-50 p-4 rounded-full">

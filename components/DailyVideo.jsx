@@ -55,6 +55,11 @@ export default function DailyVideo({ roomUrl, userName, token, onLeave }) {
                 });
                 newCallObject.on("joined-meeting", () => {
                     console.log("Daily Trace: Successfully joined meeting");
+                    try {
+                        newCallObject.setActiveSpeakerMode(false); // Force Grid View
+                    } catch (err) {
+                        console.warn("Could not set active speaker mode:", err);
+                    }
                     if (mounted) setLoading(false);
                 });
                 newCallObject.on("left-meeting", () => {
