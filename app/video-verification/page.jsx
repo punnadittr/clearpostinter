@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Video, FileCheck, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
 import DailyVideo from "../../components/DailyVideo";
@@ -10,12 +11,15 @@ export default function VideoVerificationPage() {
     const [roomName, setRoomName] = useState("");
     const [userName, setUserName] = useState("");
 
+    // Check for room URL in query params
+    const searchParams = useSearchParams();
+    const dynamicRoomUrl = searchParams.get('room');
+
+    // Automatically set a default or use the dynamic one
+    const targetRoomUrl = dynamicRoomUrl || "https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9";
+
     const generateRoom = () => {
-        // Generate a reasonably unique room name
-        const uniqueId = Math.random().toString(36).substring(7);
-        const date = new Date().toISOString().split("T")[0];
-        const room = `Clearpost-Verification-${date}-${uniqueId}`;
-        setRoomName(room);
+        // Just move to call step using the determined URL
         setStep("call");
     };
 
@@ -133,7 +137,8 @@ export default function VideoVerificationPage() {
 
                         <div className="flex-1 relative bg-black">
                             <DailyVideo
-                                roomUrl="https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9"
+                                roomUrl={targetRoomUrl}
+                                userName={userName}
                                 onLeave={() => setStep("completed")}
                             />
                         </div>
