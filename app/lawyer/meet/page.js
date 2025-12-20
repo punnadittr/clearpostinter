@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import JitsiMeet from "../../../components/JitsiMeet";
+import DailyVideo from "../../../components/DailyVideo";
 import { Gavel, ShieldAlert, Video } from "lucide-react";
 
 export default function LawyerMeetPage() {
-    const [roomName, setRoomName] = useState("");
     const [activeCall, setActiveCall] = useState(false);
-    const [lawyerName] = useState("Clearpost Legal Team"); // Fixed name for professionalism
+    const [dailyUrl, setDailyUrl] = useState("https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9"); // Default user room URL
 
     const handleJoin = (e) => {
         e.preventDefault();
-        if (roomName.trim()) {
+        if (dailyUrl.trim()) {
             setActiveCall(true);
         }
     };
@@ -26,7 +25,7 @@ export default function LawyerMeetPage() {
                         </div>
                         <div>
                             <h1 className="font-bold text-gray-900 leading-tight">Video Verification Portal</h1>
-                            <p className="text-xs text-gray-500">Connected to: {roomName}</p>
+                            <p className="text-xs text-gray-500">Secure Channel Active</p>
                         </div>
                     </div>
                     <button
@@ -37,21 +36,20 @@ export default function LawyerMeetPage() {
                     </button>
                 </div>
 
-                <div className="flex-1 relative">
-                    <JitsiMeet
-                        roomName={roomName}
-                        displayName={lawyerName}
+                <div className="flex-1 relative bg-black">
+                    <DailyVideo
+                        roomUrl={dailyUrl}
                         onLeave={() => setActiveCall(false)}
                     />
 
                     {/* Overlay hint for the lawyer */}
-                    <div className="absolute bottom-4 left-4 z-20 bg-black/80 text-white p-4 rounded-xl max-w-sm backdrop-blur-sm border border-white/10">
+                    <div className="absolute bottom-4 left-4 z-20 bg-black/80 text-white p-4 rounded-xl max-w-sm backdrop-blur-sm border border-white/10 pointer-events-none">
                         <div className="flex items-start gap-3">
                             <ShieldAlert className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-sm font-bold text-yellow-500 mb-1">Moderator Action Required?</p>
+                                <p className="text-sm font-bold text-yellow-500 mb-1">Admin Controls</p>
                                 <p className="text-xs text-gray-300">
-                                    If the screen says "Waiting for moderator", click <strong>"I am the host"</strong> in the video window and log in securely.
+                                    You are joining via the Daily.co secure frame. If you have "Knocking" enabled, admit the customer from inside the video interface.
                                 </p>
                             </div>
                         </div>
@@ -69,28 +67,28 @@ export default function LawyerMeetPage() {
                         <Gavel className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-white mb-2">Legal Team Portal</h1>
-                    <p className="text-red-100/90 text-sm">Secure Entry for Video Verification</p>
+                    <p className="text-red-100/90 text-sm">Target: Daily.co Secure Room</p>
                 </div>
 
                 <div className="p-8">
                     <form onSubmit={handleJoin} className="space-y-6">
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Enter Room ID
+                                Daily Room URL
                             </label>
                             <div className="relative">
                                 <Video className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
                                     type="text"
-                                    value={roomName}
-                                    onChange={(e) => setRoomName(e.target.value)}
-                                    placeholder="Paste Room ID here..."
+                                    value={dailyUrl}
+                                    onChange={(e) => setDailyUrl(e.target.value)}
+                                    placeholder="https://your-domain.daily.co/room"
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all placeholder:text-gray-400"
                                     required
                                 />
                             </div>
                             <p className="text-xs text-gray-500 mt-2">
-                                Paste the Room ID provided by the customer or support team.
+                                Enter the full Daily.co room URL.
                             </p>
                         </div>
 
@@ -98,7 +96,7 @@ export default function LawyerMeetPage() {
                             type="submit"
                             className="w-full py-3.5 bg-gray-900 hover:bg-black text-white rounded-xl font-semibold shadow-lg shadow-gray-900/20 transition-all transform active:scale-[0.98]"
                         >
-                            Join Session
+                            Enter Secure Room
                         </button>
                     </form>
 

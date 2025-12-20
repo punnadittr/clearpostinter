@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import JitsiMeet from "../../components/JitsiMeet";
 import { CheckCircle, Video, FileCheck, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
+import DailyVideo from "../../components/DailyVideo";
 
 export default function VideoVerificationPage() {
     const [step, setStep] = useState("intro"); // intro, call, completed
@@ -114,49 +114,19 @@ export default function VideoVerificationPage() {
                 {step === "call" && (
                     <div className="space-y-6">
                         <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
-                            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-1">Verification In Progress</h3>
-                                    <p className="text-sm text-gray-600">
-                                        Please share this Room ID with the lawyer to connect.
-                                    </p>
-                                </div>
-
-                                <div className="flex items-center gap-3 bg-gray-50 p-2 pl-4 rounded-lg border border-gray-200 w-full md:w-auto">
-                                    <code className="text-lg font-mono font-bold text-red-600 select-all tracking-wide">
-                                        {roomName}
-                                    </code>
-                                    <button
-                                        onClick={handleCopyLink}
-                                        className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-md border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm"
-                                    >
-                                        Copy ID
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="mt-4 flex items-center gap-2 text-xs text-blue-600 bg-blue-50 px-3 py-2 rounded-md inline-block">
-                                <span className="flex h-2 w-2 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                                </span>
-                                Waiting for connection...
-                            </div>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Connecting to Secure Channel...</h3>
+                             <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-lg flex gap-3">
+                                 <Video className="w-5 h-5 flex-shrink-0" />
+                                 <p>You are entering the verification lobby. Please wait for the lawyer to admit you.</p>
+                             </div>
                         </div>
 
-                        <div className="h-[600px] relative">
-                            <JitsiMeet
-                                roomName={roomName}
-                                displayName={userName}
+                        <div className="h-[500px] md:h-[600px] relative">
+                            <DailyVideo
+                                roomUrl="https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9" 
                                 onLeave={() => setStep("completed")}
                             />
                         </div>
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
-                            <span className="font-semibold">Note:</span> If you see a message saying <strong>"Waiting for moderator"</strong>, please wait. The session will start automatically when the Lawyer joins and authenticates.
-                        </div>
-                        <p className="text-center text-xs text-gray-400">
-                            End the call using the red button in the video interface to finish.
-                        </p>
                     </div>
                 )}
 

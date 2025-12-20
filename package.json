@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^17.1.6",
+    "@daily-co/daily-js": "^0.85.0",
     "@supabase/supabase-js": "^2.87.1",
     "contentful": "^11.10.0",
     "framer-motion": "^12.23.26",
