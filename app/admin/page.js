@@ -24,11 +24,11 @@ export default function CoordinatorPage() {
             setDailyUrl(data.url);
 
             // 1. Customer Link (Video Verification Page)
-            const cLink = `${window.location.origin}/video-verification?room=${encodeURIComponent(data.url)}`;
+            const cLink = `${window.location.origin}/session?room=${encodeURIComponent(data.url)}`;
             setCustomerLink(cLink);
 
             // 2. Lawyer Link (Lawyer Meet Page) - Include Owner Token
-            const lLink = `${window.location.origin}/lawyer/meet?room=${encodeURIComponent(data.url)}&token=${data.token}`;
+            const lLink = `${window.location.origin}/portal?room=${encodeURIComponent(data.url)}&token=${data.token}`;
             setLawyerLink(lLink);
 
         } catch (err) {

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, Suspense } from "react";
-import DailyVideo from "../../../components/DailyVideo";
+import DailyVideo from "../../components/DailyVideo";
 import { Gavel, ShieldAlert, Video } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
