@@ -112,20 +112,38 @@ export default function VideoVerificationPage() {
                 )}
 
                 {step === "call" && (
-                    <div className="space-y-6">
-                        <div className="bg-white border border-gray-200 p-6 rounded-xl shadow-sm">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">Connecting to Secure Channel...</h3>
-                             <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-lg flex gap-3">
-                                 <Video className="w-5 h-5 flex-shrink-0" />
-                                 <p>You are entering the verification lobby. Please wait for the lawyer to admit you.</p>
-                             </div>
+                    <div className="fixed inset-0 z-[100] bg-gray-900 flex flex-col overscroll-none overflow-hidden">
+                        <div className="bg-white border-b border-gray-200 p-4 flex justify-between items-center shadow-lg z-10">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-red-600 p-2 rounded-lg">
+                                    <ShieldCheck className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h1 className="font-bold text-gray-900 leading-tight">Secure Passport Verification</h1>
+                                    <p className="text-xs text-gray-500">Wait for admission</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setStep("completed")}
+                                className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                                Leave Call
+                            </button>
                         </div>
 
-                        <div className="h-[500px] md:h-[600px] relative">
+                        <div className="flex-1 relative bg-black">
                             <DailyVideo
-                                roomUrl="https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9" 
+                                roomUrl="https://clearpost.daily.co/lhgk1o3U8JOUjLQWfpc9"
                                 onLeave={() => setStep("completed")}
                             />
+                        </div>
+
+                        {/* Status bar */}
+                        <div className="bg-blue-600 text-white text-xs py-2 px-4 shadow-inner text-center font-medium">
+                            <div className="flex items-center justify-center gap-2">
+                                <Video className="w-3 h-3 animate-pulse" />
+                                Secure P2P Connection Active • End-to-End Encrypted
+                            </div>
                         </div>
                     </div>
                 )}

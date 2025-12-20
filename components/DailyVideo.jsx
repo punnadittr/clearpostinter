@@ -105,7 +105,7 @@ export default function DailyVideo({ roomUrl, onLeave }) {
     }, [roomUrl]);
 
     return (
-        <div className="w-full h-full min-h-[500px] relative bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-800">
+        <div className="w-full h-full relative bg-gray-900 overflow-hidden shadow-2xl border border-gray-800">
             {error && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-900 text-white p-6 text-center">
                     <div>
