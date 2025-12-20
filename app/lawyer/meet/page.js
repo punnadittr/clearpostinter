@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import DailyVideo from "../../../components/DailyVideo";
-import { Gavel, ShieldAlert, Video, Plus, Link as LinkIcon, Copy } from "lucide-react";
+import { Gavel, ShieldAlert, Video, Plus, Link as LinkIcon, Copy, MessageCircle } from "lucide-react";
 
 export default function LawyerMeetPage() {
     const [activeCall, setActiveCall] = useState(false);
@@ -168,19 +168,34 @@ export default function LawyerMeetPage() {
                                 <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
                                     Send this link to client
                                 </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        readOnly
-                                        value={generatedLink}
-                                        className="flex-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded-lg px-3 py-2 outline-none select-all"
-                                    />
-                                    <button
-                                        onClick={copyToClipboard}
-                                        className="bg-gray-900 text-white p-2 rounded-lg hover:bg-black transition-colors"
-                                        title="Copy Link"
-                                    >
-                                        <Copy className="w-5 h-5" />
-                                    </button>
+
+                                <div className="space-y-3">
+                                    {/* Large Link Display */}
+                                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 break-all text-center text-gray-600 font-mono text-sm select-all">
+                                        {generatedLink}
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {/* Copy Button */}
+                                        <button
+                                            onClick={copyToClipboard}
+                                            className="flex items-center justify-center gap-2 w-full py-3 bg-gray-900 hover:bg-black text-white rounded-xl font-semibold transition-all shadow-lg active:scale-[0.98]"
+                                        >
+                                            <Copy className="w-5 h-5" />
+                                            Copy Link
+                                        </button>
+
+                                        {/* WhatsApp Button */}
+                                        <a
+                                            href={`https://wa.me/?text=${encodeURIComponent("Please join the secure Clearpost verification session here: " + generatedLink)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-center gap-2 w-full py-3 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-semibold transition-all shadow-lg active:scale-[0.98]"
+                                        >
+                                            <MessageCircle className="w-5 h-5" />
+                                            WhatsApp
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
