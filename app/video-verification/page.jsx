@@ -62,15 +62,18 @@ export default function VideoVerificationPage() {
 
                 {step === "intro" && targetRoomUrl && (
                     <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto border border-gray-100">
+                        {/* ... shielding logo ... */}
                         <div className="flex justify-center mb-8">
                             <div className="bg-red-50 p-4 rounded-full">
                                 <ShieldCheck className="w-16 h-16 text-red-600" />
                             </div>
                         </div>
 
+                        {/* ... How it works section ... */}
                         <h2 className="text-2xl font-semibold mb-6 text-center">
                             How it works
                         </h2>
+                        {/* (Keep existing content here) ... */}
 
                         <div className="space-y-6 mb-8">
                             <div className="flex items-start gap-4">
@@ -84,7 +87,7 @@ export default function VideoVerificationPage() {
                                     </p>
                                 </div>
                             </div>
-
+                            {/* ... validation steps ... */}
                             <div className="flex items-start gap-4">
                                 <div className="bg-green-50 p-2 rounded-lg">
                                     <FileCheck className="w-6 h-6 text-green-600" />
@@ -111,29 +114,36 @@ export default function VideoVerificationPage() {
                         </div>
 
                         <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Your Name (as needed for the call)
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Somchai Jai-dee"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                />
+                            {/* Warning Alert */}
+                            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">
+                                        <ShieldCheck className="h-5 w-5 text-yellow-400" />
+                                    </div>
+                                    <div className="ml-3">
+                                        <p className="text-sm text-yellow-700 font-bold">
+                                            Requirement:
+                                        </p>
+                                        <p className="text-sm text-yellow-700">
+                                            Please have your <span className="font-bold">Original Passport</span> ready to show to the camera.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
                             <button
                                 onClick={generateRoom}
-                                disabled={!userName.trim()}
-                                className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold shadow-lg shadow-red-600/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-[0.98]"
+                                className="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold shadow-lg shadow-red-600/20 transition-all transform active:scale-[0.98]"
                             >
-                                Connect with Lawyer
+                                Video Call to Verify Your Identity
                             </button>
+
+
                         </div>
                     </div>
                 )}
+
+
 
                 {step === "call" && (
                     <div className="fixed inset-0 z-[100] bg-gray-900 flex flex-col overscroll-none overflow-hidden">
