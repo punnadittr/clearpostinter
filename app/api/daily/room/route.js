@@ -40,7 +40,36 @@ export async function POST() {
         }
 
         const roomData = await response.json();
-        return NextResponse.json(roomData);
+
+        // Generate an owner token for this room
+        const tokenPayload = {
+            properties: {
+                room_name: roomData.name,
+                is_owner: true,
+                user_name: "Legal Team (Host)",
+            }
+        };
+
+        const tokenResponse = await fetch('https://api.daily.co/v1/meeting-tokens', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${DAILY_API_KEY}`,
+            },
+            body: JSON.stringify(tokenPayload),
+        });
+
+        if (!tokenResponse.ok) {
+            console.error("Failed to generate token", await tokenResponse.json());
+            // Proceeding without token, but logging error
+        }
+
+        const tokenData = await tokenResponse.json();
+
+        return NextResponse.json({
+            ...roomData,
+            token: tokenData.token
+        });
     } catch (error) {
         console.error('Error creating Daily room:', error);
         return NextResponse.json(

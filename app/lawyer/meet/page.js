@@ -12,6 +12,7 @@ function LawyerMeetContent() {
     // Auto-populate from URL
     const searchParams = useSearchParams();
     const roomParam = searchParams.get('room');
+    const tokenParam = searchParams.get('token');
 
     useEffect(() => {
         if (roomParam) {
@@ -50,6 +51,7 @@ function LawyerMeetContent() {
                 <div className="flex-1 relative bg-black">
                     <DailyVideo
                         roomUrl={dailyUrl}
+                        token={tokenParam}
                         onLeave={() => setActiveCall(false)}
                     />
 

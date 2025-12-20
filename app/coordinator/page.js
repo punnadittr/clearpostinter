@@ -27,8 +27,8 @@ export default function CoordinatorPage() {
             const cLink = `${window.location.origin}/video-verification?room=${encodeURIComponent(data.url)}`;
             setCustomerLink(cLink);
 
-            // 2. Lawyer Link (Lawyer Meet Page)
-            const lLink = `${window.location.origin}/lawyer/meet?room=${encodeURIComponent(data.url)}`;
+            // 2. Lawyer Link (Lawyer Meet Page) - Include Owner Token
+            const lLink = `${window.location.origin}/lawyer/meet?room=${encodeURIComponent(data.url)}&token=${data.token}`;
             setLawyerLink(lLink);
 
         } catch (err) {

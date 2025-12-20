@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function DailyVideo({ roomUrl, userName, onLeave }) {
+export default function DailyVideo({ roomUrl, userName, token, onLeave }) {
     const callWrapperRef = useRef(null);
     const callInstanceRef = useRef(null); // Track instance without re-renders
     const [error, setError] = useState(null);
@@ -70,10 +70,16 @@ export default function DailyVideo({ roomUrl, userName, onLeave }) {
                 console.log("Daily Trace: Joining room:", roomUrl);
 
                 // Join with url and optional userName
-                await newCallObject.join({
+                const joinOptions = {
                     url: roomUrl,
-                    userName: userName || "Guest User"
-                });
+                    userName: userName || "Guest User",
+                };
+
+                if (token) {
+                    joinOptions.token = token;
+                }
+
+                await newCallObject.join(joinOptions);
                 console.log("Daily Trace: Join command sent");
 
             } catch (e) {
