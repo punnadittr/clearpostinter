@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 export default function DailyVideo({ roomUrl, userName, onLeave }) {
     const callWrapperRef = useRef(null);
     const callInstanceRef = useRef(null); // Track instance without re-renders
-
-    // ... (rest of state declarations)
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!roomUrl) return;
@@ -18,11 +18,54 @@ export default function DailyVideo({ roomUrl, userName, onLeave }) {
             if (callInstanceRef.current) return;
 
             try {
-                // ... (existing import and setup code)
+                console.log("Daily Trace: Importing @daily-co/daily-js...");
+                const daily = await import("@daily-co/daily-js");
 
-                // (LINES 20-50 omitted for brevity, keeping same logic)
+                if (!mounted) {
+                    console.log("Daily Trace: Component unmounted during import, skipping...");
+                    return;
+                }
 
-                // ...
+                const DailyIframe = daily.default;
+                console.log("Daily Trace: Library imported.");
+
+                if (!callWrapperRef.current) return;
+
+                // Clear any existing children to ensure a fresh start
+                while (callWrapperRef.current.firstChild) {
+                    callWrapperRef.current.removeChild(callWrapperRef.current.firstChild);
+                }
+
+                const newCallObject = DailyIframe.createFrame(callWrapperRef.current, {
+                    iframeStyle: {
+                        width: "100%",
+                        height: "100%",
+                        border: "0",
+                        borderRadius: "12px",
+                    },
+                    showLeaveButton: true,
+                    showFullscreenButton: true,
+                });
+
+                callInstanceRef.current = newCallObject;
+
+                newCallObject.on("loaded", () => {
+                    console.log("Daily Trace: Frame loaded and interactive");
+                    if (mounted) setLoading(false);
+                });
+                newCallObject.on("joined-meeting", () => {
+                    console.log("Daily Trace: Successfully joined meeting");
+                    if (mounted) setLoading(false);
+                });
+                newCallObject.on("left-meeting", () => {
+                    console.log("Daily Trace: Left meeting");
+                    if (mounted) destroyCall();
+                    if (onLeave) onLeave();
+                });
+                newCallObject.on("error", (e) => {
+                    console.error("Daily Trace Error:", e);
+                    if (mounted) setError(e.errorMsg || "A video connection error occurred. Please try refreshing.");
+                });
 
                 console.log("Daily Trace: Joining room:", roomUrl);
 
@@ -35,7 +78,7 @@ export default function DailyVideo({ roomUrl, userName, onLeave }) {
 
             } catch (e) {
                 console.error("Failed to create Daily call:", e);
-                if (mounted) setError("Failed to initialize video call. " + e.message);
+                if (mounted) setError("Failed to initialize video call. " + (e.message || e));
             }
         };
 
