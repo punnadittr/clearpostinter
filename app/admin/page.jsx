@@ -13,11 +13,40 @@ export default function CoordinatorPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+    // Auth
+    const [password, setPassword] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password }),
+            });
+
+            if (res.ok) {
+                setIsAuthenticated(true);
+            } else {
+                alert("Incorrect Password");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Login failed");
+        }
+    };
+
     const handleCreateSession = async () => {
         setLoading(true);
         setError("");
         try {
-            const res = await fetch('/api/daily/room', { method: 'POST' });
+            const res = await fetch('/api/daily/room', {
+                method: 'POST',
+                headers: {
+                    'x-admin-password': password
+                }
+            });
             if (!res.ok) throw new Error("Failed to create room");
             const data = await res.json();
 
@@ -43,6 +72,35 @@ export default function CoordinatorPage() {
         navigator.clipboard.writeText(text);
         alert(`${label} copied to clipboard!`);
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+                <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 text-center">
+                    <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <ShieldAlert className="w-8 h-8 text-red-600" />
+                    </div>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Restricted Access</h1>
+                    <p className="text-gray-500 mb-6 text-sm">Please enter the Coordinator Password to access the dashboard.</p>
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none transition-all"
+                            placeholder="Enter Password"
+                        />
+                        <button
+                            type="submit"
+                            className="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors"
+                        >
+                            Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">

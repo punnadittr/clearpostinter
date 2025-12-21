@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export async function POST() {
+export async function POST(request) {
     // Use the API key from environment variables
     // IMPORTANT: You need to add DAILY_API_KEY to your .env.local file
     const DAILY_API_KEY = process.env.DAILY_API_KEY;
@@ -10,6 +10,12 @@ export async function POST() {
             { error: 'Daily API key not configured. Please add DAILY_API_KEY to .env.local' },
             { status: 500 }
         );
+    }
+
+    // Security Check
+    const authHeader = request.headers.get('x-admin-password');
+    if (authHeader !== process.env.COORDINATOR_PASSWORD) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {

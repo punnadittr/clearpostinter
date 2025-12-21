@@ -11,6 +11,20 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
+        // Security Hardening: Regex Validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\+?[0-9]{8,15}$/; // Basic international phone check
+
+        if (!emailRegex.test(customer_email)) {
+            return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
+        }
+        if (!phoneRegex.test(whatsapp.replace(/\s/g, ''))) { // strip spaces for check
+            return NextResponse.json({ error: 'Invalid WhatsApp format. Use numbers only.' }, { status: 400 });
+        }
+
+        // Security Hardening: Rate Limit Simulation (No-op for demo, but good practice placeholder)
+        // await rateLimiter.check(request.ip);
+
         // 1. Double check availability (prevent race conditions in a real app)
         // For this demo, we skip detailed locking logic but do a quick check
         const { data: existing } = await supabase
