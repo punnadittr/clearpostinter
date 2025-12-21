@@ -3,10 +3,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Globe, Mail, Phone, MessageCircle, MapPin, CheckCircle, Plane, X } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
   const [showCertificate, setShowCertificate] = useState(false);
+
+  // Don't show footer on session pages (video calls)
+  if (pathname?.startsWith('/session')) {
+    return null;
+  }
 
   return (
     <>
