@@ -801,7 +801,7 @@ const ClearpostLanding = () => {
             {showBookingWizard && <ImportAssessmentWizard onClose={() => setShowBookingWizard(false)} />}
 
             {/* Floating WhatsApp Button (Mobile) */}
-            <a href="#" className="md:hidden fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform shadow-green-900/20">
+            <a href="https://wa.me/66972437832" target="_blank" rel="noopener noreferrer" className="md:hidden fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform shadow-green-900/20">
                 <MessageCircle size={28} />
             </a>
             {/* Image Modal / Lightbox */}

@@ -60,6 +60,103 @@ export default function AppointmentScheduler({ onCancel }) {
             const data = await res.json();
             if (res.ok) {
                 setBookingRef(data.booking.id);
+
+                // Trigger Confirmation Email
+                await fetch('/api/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        subject: 'Appointment Confirmed: Clearpost International',
+                        html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Appointment Confirmed</title>
+                        </head>
+                        <body style="margin: 0; padding: 0; background-color: #f6f9fc; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                <!-- Header -->
+                                <tr>
+                                    <td style="background-color: #1e3a8a; padding: 40px 0; text-align: center;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">CLEARPOST</h1>
+                                        <p style="color: #93c5fd; margin: 10px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Identity Verification</p>
+                                    </td>
+                                </tr>
+
+                                <!-- Content -->
+                                <tr>
+                                    <td style="padding: 40px 30px;">
+                                        <h2 style="color: #111827; margin: 0 0 20px 0; font-size: 20px;">Hello ${formData.name},</h2>
+                                        <p style="color: #4b5563; font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                            Your video verification appointment has been confirmed. Please see the details below.
+                                        </p>
+
+                                        <!-- Summary Card -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f3f4f6; border-radius: 8px; margin-bottom: 30px;">
+                                            <tr>
+                                                <td style="padding: 24px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <td style="padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Appointment Details</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 16px 0 4px 0; color: #6b7280; font-size: 14px;">Date</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 12px; color: #111827; font-size: 16px; font-weight: 500;">${format(selectedDate, 'PPP')}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 8px 0 4px 0; color: #6b7280; font-size: 14px;">Time</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 12px; color: #111827; font-size: 24px; font-weight: bold; color: #2563eb;">${selectedSlot.time}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 8px 0 4px 0; color: #6b7280; font-size: 14px;">Contact</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 0px; color: #111827; font-size: 16px; font-weight: 500;">${formData.whatsapp}</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <!-- Important Box -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fff1f2; border: 1px solid #ffe4e6; border-radius: 8px; margin-bottom: 30px;">
+                                            <tr>
+                                                <td style="padding: 16px;">
+                                                    <p style="margin: 0; color: #9f1239; font-size: 14px; text-align: center; font-weight: 500;">
+                                                        ⚠️ Please have your <strong>Passport</strong> ready for verification.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="color: #6b7280; font-size: 14px; line-height: 22px; margin: 0; text-align: center;">
+                                            Our agent will contact you via WhatsApp at the scheduled time.
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="background-color: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
+                                        <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                                            © ${new Date().getFullYear()} Clearpost International. All rights reserved.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </body>
+                        </html>
+                        `
+                    })
+                });
+
                 setStep(4);
             } else {
                 alert(data.error || "Booking failed");
@@ -259,8 +356,7 @@ export default function AppointmentScheduler({ onCancel }) {
                             </p>
                         </div>
                         <p className="text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
-                            We have sent a confirmation email to <strong>{formData.email}</strong>.<br />
-                            Please check your inbox (and spam folder) for the meeting link.
+                            We have sent a confirmation email to <strong>{formData.email}</strong>.
                         </p>
                         <button
                             onClick={onCancel}

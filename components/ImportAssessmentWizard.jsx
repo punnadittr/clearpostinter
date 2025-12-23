@@ -105,6 +105,14 @@ export default function ImportAssessmentWizard({ onClose }) {
         }
     }, [currentStep]);
 
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -252,7 +260,7 @@ export default function ImportAssessmentWizard({ onClose }) {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        to: formData.email,
+                        email: formData.email,
                         subject: 'Import Assessment Request Received - Clearpost',
                         html: `
                         <!DOCTYPE html>
@@ -408,7 +416,7 @@ export default function ImportAssessmentWizard({ onClose }) {
                             <div className="relative w-20 h-20 mb-6">
                                 <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
                                 <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
-                                <Loader2 className="absolute inset-0 w-full h-full text-blue-600 p-6 animate-pulse" />
+                                {/* Removed redundant inner Loader2 */}
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 mb-2">Processing...</h3>
                             <p className="text-slate-500 text-center text-sm">

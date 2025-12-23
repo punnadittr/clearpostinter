@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
         'image': `${baseUrl}/opengraph-image.png`,
         '@id': baseUrl,
         'url': baseUrl,
-        'telephone': '+66800000000',
+        'telephone': '+66972437832',
         'address': {
             '@type': 'PostalAddress',
             'streetAddress': '1222/310 Liab Klong Rangsit Road, Prachathipat',
