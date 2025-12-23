@@ -1,6 +1,6 @@
 "use client";
 
-import BookingWizard from "../../components/booking/BookingWizard";
+import AppointmentScheduler from "../../components/booking/AppointmentScheduler";
 
 import { ShieldCheck } from "lucide-react";
 
@@ -21,7 +21,7 @@ export default function SchedulePage() {
                     </p>
                 </div>
 
-                <BookingWizard />
+                <AppointmentScheduler />
             </div>
             <style jsx global>{`
                 footer {

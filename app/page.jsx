@@ -42,7 +42,7 @@ import {
     Armchair,
 
 } from 'lucide-react';
-import BookingWizard from '../components/BookingWizard';
+import ImportAssessmentWizard from '../components/ImportAssessmentWizard';
 import AntidoteReceipt from '../components/AntidoteReceipt';
 import TransparencyIllustration from '../components/TransparencyIllustration';
 import Footer from '../components/Footer';
@@ -162,7 +162,7 @@ const ClearpostLanding = () => {
                         <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-8">
                             Don't let <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-white">Customs</span>
-                            <br /> kill your vibe.
+                            <br /> slow you down.
                         </h1>
 
                         <p className="text-xl text-slate-300 mb-10 leading-relaxed max-w-lg font-light">
@@ -433,7 +433,7 @@ const ClearpostLanding = () => {
                             {
                                 icon: MessageCircle,
                                 color: "blue",
-                                title: "Silent Treatment",
+                                title: "Lack of Communication",
                                 desc: "When things go wrong, nobody speaks English. You are left in the dark while storage fees pile up daily."
                             }
 
@@ -473,7 +473,7 @@ const ClearpostLanding = () => {
                         {/* Left Content */}
                         <div className="order-2 lg:order-1">
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
-                                We are the <span className="text-blue-500">Antidote</span> to Logistics Chaos.
+                                We are the <span className="text-blue-500">Solution</span> to Logistics Chaos.
                             </h2>
                             <p className="text-slate-400 text-lg mb-10 leading-relaxed">
                                 We don't just "submit papers". We engineer a compliant path for your goods. Our job starts way before the ship leaves the port.
@@ -483,7 +483,7 @@ const ClearpostLanding = () => {
                                 {[
                                     { title: "Pre-Flight Audit", desc: "We review commercial invoices line-by-line to match Thai Harmonized Codes." },
                                     { title: "HS Code Consultation", desc: "Expert advice on classification to ensure lowest legal duty rates." },
-                                    { title: "Transparent Billing", desc: "You see the official Customs receipt. No markup on taxes. No hidden 'tea money'." },
+                                    { title: "Transparent Billing", desc: "You see the official Customs receipt. No markup on taxes. No hidden fees." },
                                 ].map((service, idx) => (
                                     <div key={idx} className="flex gap-6 group cursor-default">
                                         <div className="mt-1 flex-shrink-0 w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center border border-blue-500 shadow-lg shadow-blue-900/20">
@@ -522,7 +522,7 @@ const ClearpostLanding = () => {
                             Usage Fees
                         </h2>
                         <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-                            Transparent pricing. No hidden "tea money".
+                            Transparent pricing. No hidden fees.
                         </p>
                     </div>
 
@@ -798,7 +798,7 @@ const ClearpostLanding = () => {
 
 
             {/* Modal */}
-            {showBookingWizard && <BookingWizard onClose={() => setShowBookingWizard(false)} />}
+            {showBookingWizard && <ImportAssessmentWizard onClose={() => setShowBookingWizard(false)} />}
 
             {/* Floating WhatsApp Button (Mobile) */}
             <a href="#" className="md:hidden fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-2xl z-40 hover:scale-110 transition-transform shadow-green-900/20">

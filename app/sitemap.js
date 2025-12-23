@@ -19,7 +19,7 @@ async function getBlogPosts() {
         });
 
         return res.items.map((item) => ({
-            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpostinter.netlify.app'}/resources/${item.sys.id}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://thailandcustomsclearance.com'}/resources/${item.sys.id}`,
             lastModified: new Date(item.sys.updatedAt),
             changeFrequency: 'weekly',
             priority: 0.7,
@@ -31,7 +31,7 @@ async function getBlogPosts() {
 }
 
 export default async function sitemap() {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpostinter.netlify.app';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thailandcustomsclearance.com';
     const blogPosts = await getBlogPosts();
 
     return [

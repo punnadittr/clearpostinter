@@ -14,7 +14,8 @@ import {
     FileText,
     FileSpreadsheet,
     Image as ImageIcon,
-    File as FileIcon
+    File as FileIcon,
+    Loader2
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import * as yup from 'yup';
@@ -77,7 +78,7 @@ const STEPS = [
     { id: 4, title: 'Evidence', fields: [] }
 ];
 
-export default function BookingWizard({ onClose }) {
+export default function ImportAssessmentWizard({ onClose }) {
     const router = useRouter();
     const [viewingImage, setViewingImage] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
@@ -179,26 +180,40 @@ export default function BookingWizard({ onClose }) {
         setIsSubmitting(true);
 
         try {
-            let fileUrl = null;
+            let evidencePayload = null;
+            const uploadedUrls = [];
 
-            // Upload file to Supabase Storage if exists
-            if (formData.files.length > 0 && formData.files[0]) {
-                const file = formData.files[0];
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+            // Upload files sequentially to avoid race conditions and improved error handling
+            if (formData.files.length > 0) {
+                for (const file of formData.files) {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('evidence')
-                    .upload(fileName, file);
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('evidence')
+                        .upload(fileName, file);
 
-                if (uploadError) {
-                    console.error('File upload error:', uploadError);
-                } else {
+                    if (uploadError) {
+                        console.error('File upload error:', uploadError);
+                        // We continue with other files or throw depending on strictness. 
+                        // Let's throw to let user know something went wrong.
+                        throw new Error(`File upload failed for ${file.name}: ${uploadError.message}`);
+                    }
+
                     // Get public URL
                     const { data: urlData } = supabase.storage
                         .from('evidence')
                         .getPublicUrl(fileName);
-                    fileUrl = urlData.publicUrl;
+
+                    if (urlData?.publicUrl) {
+                        uploadedUrls.push(urlData.publicUrl);
+                    }
+                }
+
+                if (uploadedUrls.length === 1) {
+                    evidencePayload = uploadedUrls[0];
+                } else if (uploadedUrls.length > 1) {
+                    evidencePayload = JSON.stringify(uploadedUrls);
                 }
             }
 
@@ -214,17 +229,122 @@ export default function BookingWizard({ onClose }) {
                     item_description: formData.itemDescription,
                     current_status: formData.currentStatus,
                     license_status: formData.licenseStatus,
-                    evidence_url: fileUrl,
+                    evidence_url: evidencePayload,
                 }]);
 
             if (error) {
-                throw new Error('Failed to save form data');
+                throw new Error(`Database error: ${error.message}`);
+            }
+
+            // Helper to get labels
+            const getLabel = (options, value) => {
+                const found = options.find(opt => opt.value === value);
+                return found ? found.label : value;
+            };
+
+            const shippingLabel = getLabel(SHIPPING_CARRIERS, formData.shippingCarrier);
+            const statusLabel = getLabel(CURRENT_STATUS_OPTIONS, formData.currentStatus);
+            const licenseLabel = getLabel(LICENSE_STATUS_OPTIONS, formData.licenseStatus);
+
+            // Send confirmation email
+            try {
+                await fetch('/api/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: formData.email,
+                        subject: 'Import Assessment Request Received - Clearpost',
+                        html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Submission Received</title>
+                        </head>
+                        <body style="margin: 0; padding: 0; background-color: #f6f9fc; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                                <!-- Header -->
+                                <tr>
+                                    <td style="background-color: #1e3a8a; padding: 40px 0; text-align: center;">
+                                        <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold; letter-spacing: 1px;">CLEARPOST</h1>
+                                        <p style="color: #93c5fd; margin: 10px 0 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Import Solutions</p>
+                                    </td>
+                                </tr>
+
+                                <!-- Content -->
+                                <tr>
+                                    <td style="padding: 40px 30px;">
+                                        <h2 style="color: #111827; margin: 0 0 20px 0; font-size: 20px;">Hello ${formData.fullName},</h2>
+                                        <p style="color: #4b5563; font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                                            We have received your request for an import assessment. Our team is currently reviewing your details and will contact you shortly via WhatsApp.
+                                        </p>
+
+                                        <!-- Summary Card -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f3f4f6; border-radius: 8px; margin-bottom: 30px;">
+                                            <tr>
+                                                <td style="padding: 24px;">
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tr>
+                                                            <td style="padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Request Details</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 12px 0 4px 0; color: #6b7280; font-size: 14px;">Item Description</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 16px; color: #111827; font-size: 16px; font-weight: 500;">${formData.itemDescription}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 12px 0 4px 0; color: #6b7280; font-size: 14px;">Shipping Carrier</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 16px; color: #111827; font-size: 16px; font-weight: 500;">${shippingLabel}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 12px 0 4px 0; color: #6b7280; font-size: 14px;">Current Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 16px; color: #111827; font-size: 16px; font-weight: 500;">${statusLabel}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding: 12px 0 4px 0; color: #6b7280; font-size: 14px;">License Status</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="padding-bottom: 0; color: #111827; font-size: 16px; font-weight: 500;">${licenseLabel}</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <p style="color: #4b5563; font-size: 16px; line-height: 24px; margin: 0;">
+                                            If you have any urgent questions, please feel free to reply to this email.
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <!-- Footer -->
+                                <tr>
+                                    <td style="background-color: #f9fafb; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                                        <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">&copy; ${new Date().getFullYear()} Clearpost International</p>
+                                        <p style="color: #9ca3af; font-size: 14px; margin: 0;">Bangkok, Thailand</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </body>
+                        </html>
+                    `
+                    })
+                });
+            } catch (emailErr) {
+                console.error('Email sending failed:', emailErr);
+                // We do NOT block success here, just log it.
             }
 
             setIsSuccess(true);
         } catch (err) {
             console.error('Submission error:', err);
-            alert('Something went wrong. Please try again.');
+            alert(`Error: ${err.message}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -280,6 +400,23 @@ export default function BookingWizard({ onClose }) {
                 <button onClick={onClose} className="absolute top-6 right-6 text-slate-300 hover:text-slate-600 z-10">
                     <X size={24} />
                 </button>
+
+                {/* Loading Overlay */}
+                {isSubmitting && (
+                    <div className="absolute inset-0 z-50 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center animate-in fade-in duration-300">
+                        <div className="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 flex flex-col items-center max-w-sm w-full mx-4">
+                            <div className="relative w-20 h-20 mb-6">
+                                <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
+                                <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+                                <Loader2 className="absolute inset-0 w-full h-full text-blue-600 p-6 animate-pulse" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-2">Processing...</h3>
+                            <p className="text-slate-500 text-center text-sm">
+                                {formData.files.length > 0 ? "Securely uploading your documents and submitting request..." : "Submitting your request..."}
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 {/* Header with Steps */}
                 <div className="p-6 pb-4 border-b border-slate-100 bg-white">

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { format, addDays, startOfToday, isSameDay } from 'date-fns';
 import { Calendar, Clock, User, CheckCircle, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
-export default function BookingWizard({ onCancel }) {
+export default function AppointmentScheduler({ onCancel }) {
     const [step, setStep] = useState(1); // 1: Date, 2: Time, 3: Details, 4: Success
     const [selectedDate, setSelectedDate] = useState(addDays(startOfToday(), 1));
     const [availableSlots, setAvailableSlots] = useState([]);
@@ -175,7 +175,7 @@ export default function BookingWizard({ onCancel }) {
                                     <Clock className="w-5 h-5 md:w-6 md:h-6 text-blue-300" />
                                 </div>
                                 <div>
-                                    <p className="text-blue-200 text-xs md:text-sm font-medium mb-1">Passpost Verification</p>
+                                    <p className="text-blue-200 text-xs md:text-sm font-medium mb-1">Passport Verification</p>
                                     <p className="text-xl md:text-2xl font-bold tracking-tight">
                                         {format(selectedDate, 'EEEE, MMMM do')}
                                     </p>

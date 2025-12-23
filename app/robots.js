@@ -1,5 +1,5 @@
 export default function robots() {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://clearpostinter.netlify.app';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thailandcustomsclearance.com';
     return {
         rules: {
             userAgent: '*',
