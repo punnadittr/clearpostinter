@@ -13,7 +13,7 @@ export async function POST(request) {
         }
 
         const { data, error } = await resend.emails.send({
-            from: 'Clearpost <status@notifications.thailandcustomsclearance.com>',
+            from: 'Clearpost <no-reply@mail.thailandcustomsclearance.com>',
             to: email, // Send to customer + admin copy
             subject: body.subject || 'Clearpost Notification',
             html: html, // Keep html field as it's still part of the body and useful
